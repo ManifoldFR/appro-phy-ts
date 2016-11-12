@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{book}
 \usepackage{polyglossia}
 \usepackage{subfiles}
 \usepackage[hmargin=4.2cm]{geometry}
@@ -60,6 +60,16 @@
 \newcommand{\onlyinsubfile}[1]{#1}
 \newcommand{\notinsubfile}[1]{}
 
+% Structure numbering format
+
+\renewcommand{\chaptermark}[1]{
+	\markboth{
+    	\MakeUppercase{
+    	\chaptername\ \thechapter.\ \textsl{#1}
+        }
+    }{}
+    }
+
 \begin{document}
 
 \renewcommand{\onlyinsubfile}[1]{}
@@ -67,7 +77,7 @@
 
 \maketitle
 
-\part{Oscillateurs}
+\chapter{Oscillateurs}
 
     \subfile{parts/ressorts.tex}
 
