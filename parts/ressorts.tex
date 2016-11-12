@@ -1,0 +1,84 @@
+\documentclass[../main]{subfiles}
+
+\begin{document}
+
+\onlyinsubfile{
+    \begin{center}
+    {\Huge \textsc{Compléments:\\ Oscillateurs}}
+    \end{center}
+}
+
+    Les oscillateurs sont des systèmes physiques omniprésents dans notre monde moderne : les suspensions d'un véhicule, un pendule, l'horloge du microprocesseur d'un système informatique...
+
+    Ils sont caractérisés par un mouvement de va et vient d'une grandeur physique (position, vitesse, tension ou intensité électrique, angle) autour d'une ou plusieurs valeurs, souvent une valeur dite \textit{d'équilibre}.
+
+\noindent\textit{Prérequis:} AP maths, équations différentielles.
+
+\section{Oscillateur harmonique}
+
+\subsection{Loi de Hooke}
+
+Un ressort est un objet élastique utilisé pour emmagasiner de l'énergie mécanique, sous la forme d'énergie potentielle élastique, en jouant sur son élasticité pour le déformer et exercer une tension sur les liaisons entre les atomes du matériau.
+
+La loi de Hooke est une modélisation possible de l'action mécanique d'un ressort, provenant de l'énergie potentielle emmagasinée. Ce modèle est applicable pour des systèmes physiques où la masse du ressort est négligeable devant celle du reste du système, et où le ressort n'est pas soumis à une déformation trop importante risquant de rompre certaines des liaisons inter-atomiques.
+
+Deux paramètres interviennent dans ce modèle : la constante de raideur $k$ du ressort, en $\si{\newton\per\metre} $, et sa longueur à vide $\ell_0$. En notant $\vec{\Delta\ell}$ le vecteur de déformation du ressort, la force dite \textit{de rappel} qu'exerce le ressort idéal est
+	\[
+    \vec{F} = -k\vec{\Delta\ell}. \quad \text{(loi de Hooke)}
+    \]
+
+\subsection{Système masse-ressort}
+
+On considère maintenant qu'un objet de masse $m$, que l'on assimilera à un point matériel, est accroché à l'extrémité libre d'un ressort posé à l'horizontale sur un plan. On suppose que le ressort ne peut se déformer que selon une direction donnée par un vecteur unitaire noté $\vec{e}_x$. La déformation s'écrit alors $\vec{\Delta\ell}=(\ell-\ell_0)\vec{e_x}$. Le référentiel d'étude est le référentiel terrestre que l'on supposera galiléen. 
+
+La masse $m$ est soumise à son poids, et l'exerce sur le support ; en vertu de la troisième loi de Newton, le support exerce sur la masse une réaction égale à l'opposée du poids qui le compense. Ne reste que la force de rappel.
+
+Le système est donc à l'équilibre lorsque $\vec{F}=\vec{0}$, i.e. $\ell=\ell_0$. On ramène l'espace au repère $(O,\vec{e}_x)$ où $O$ est la position d'équilibre de la masse. La position de la masse est donc $\vec{r}=x\vec{e}_x$ où $x=\ell-\ell_0$.
+
+D'après le principe fondamental de la dynamique, la position $\vec{r}$ de la masse vérifie l'équation différentielle
+    \[
+    m\ddot{\vec{r}} = \vec{F} = -k(\ell-\ell_0)\vec{e}_x.
+    \]
+
+Projeter selon $\vec{e}_x$ fournit successivement :
+    \begin{equation}\label{springmassEq}
+    m\ddot{x} = -k(\ell-\ell_0)=-kx
+    \quad \text{puis}\quad m\ddot{x} + kx =0.
+    \end{equation}
+
+On définit alors le paramètre $\omega_0\coloneqq \sqrt{\frac{k}{m}}$, appelé \textit{pulsation propre}, et dont nous préciserons les sens mathématique et physique plus loin. Son unité est le \si{\radian\per\second}. L'équation \eqref{springmassEq} devient alors:
+    \begin{equation}
+        \ddot{x} + {\omega_0}^2x = 0.
+    \end{equation}
+
+Cette équation différentielle linéaire du deuxième ordre, appelée \textit{équation de l'oscillateur harmonique}, est l'une des équations les plus fondamentales de la physique. On la retrouve dans l'étude de systèmes mécaniques ou électroniques, que cela soit l'équation d'évolution obtenue directement par modélisation ou le résultat d'une approximation visant à étudier les oscillations d'un système autour d'un équilibre.
+
+Il existe deux réels $A$ et $B$ tels que
+	\begin{equation*}
+	x(t) = A\cos\omega_0 t + B\sin\omega_0 t.
+	\end{equation*}
+
+On note $x_0=x(0)$ et $v_0=\dot{x}(0)$ la position et la vitesse initiale de la masse. En utilisant l'expression, en déduire les expressions de $A$ et de $B$.
+
+
+\begin{exo}
+Montrer qu'il existe deux réels $X_m$ et $\phi$ tels que 
+\[x(t)=X_m\cos(\omega_0t+\phi),\]
+les exprimer en fonction de $x_0$, $v_0$ et $\omega_0$.
+\end{exo}
+
+\subsection{Aspects énergétiques}
+
+\subsection{Exercices}
+
+\begin{exo}
+	On considère une masse $m$ accrochée au bout d'un ressort pendant à la verticale, dont l'autre extrémité est retenue par un plan horizontal. On note $z$ l'altitude de la masse $m$, avec $z=0$ au niveau du plan. Déterminer la position d'équilibre, l'équation du mouvement et la résoudre.
+\end{exo}
+
+\section{Oscillateur amorti}
+
+\subsection{Forces de frottement fluide}
+
+\section{Oscillateurs couplés}
+
+\end{document}
