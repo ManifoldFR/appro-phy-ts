@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage{polyglossia}
+\usepackage[a4paper]{geometry}
+\usepackage{mathtools, amssymb, amsfonts}
+\usepackage{amsthm}
+\usepackage{fontspec}
+\usepackage{titling}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usepackage[shortlabels]{enumitem}
+\usepackage{comment}
+
+\setdefaultlanguage{french}
+
+%% Math commands
+\renewcommand\epsilon\varepsilon
+\renewcommand\phi\varphi
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\CC}{\mathbb C}
+\newcommand{\K}{\mathbb K}
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+
+%% Titling configuration
+\pretitle{\begin{center}\LARGE}
+\title{\textsc{Effet Doppler}}
+\posttitle{\par\end{center}\vspace{-1.2em}}
+
+\preauthor{}
+\author{}
+\postauthor{}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+	L'effet Doppler est le phénomène par lequel la perception d'un signal (acoustique, électromagnétique) émis par une source en mouvement relativement à un observateur présente, pour un signal monochromatique composé d'une seule fréquence, un décalage de celle-ci -- ou, pour un signal composé, un décalage de son spectre en fréquence.
+	
+	On va ici aller plus loin dans l'explication de ce phénomène, et démontrer la formule donnée dans le cours.
+\end{abstract}
+
+Vous connaissez certainement le principe de la décomposition de Fourier: on peut écrire tout signal comme somme de signaux monochromatiques, de la forme $A(\omega)\cos(\omega t - \phi(\omega))$, où $A(\omega)$ est l'amplitude de l'harmonique $\omega$ du signal initial et $\phi(\omega)$ sa phase. Vous avez mis en application ce principe en TP, lorsque vous avez réalisé à l'aide d'un logiciel les spectres en fréquence -- concrètement, les courbes de la fonction $A(\omega)$ -- de plusieurs signaux.
+
+Pour cette raison, on peut simplifier le problème et se placer dans le cas où le signal émis est monochromatique, c'est-à-dire composé d'une seule longueur d'onde $\lambda = c/f$, où $c$ est la célérité des ondes dans le milieu et $f$ la fréquence correspondante.
+
+
+Il se comprend de la façon suivante : entre chaque émission d'un front d'onde s'écoule une durée égale à la période $T=\lambda/c=1/f$ de la source, celle-ci se déplace de $\vec v T$.
+
+\begin{center}
+\begin{tikzpicture}
+\draw [thick, blue, ->] (0,0)--(2,1);
+\node [below left] (S) at (0,0) {Source};
+\coordinate at (0,0);
+\end{tikzpicture}
+\end{center}
+
+Si $\vec u$ représente la ligne de visée de l'observateur, la distance entre les fronts d'ondes émis entre $t$ et $t+T$ est $\tilde{\lambda} = (c+\vec v\cdot\vec u)T$, de sorte que la fréquence du signal perçu est
+
+\[
+\tilde{f} = \frac{c}{\tilde{\lambda}} = \frac{c}{(c+\vec u \cdot \vec u)T} = \frac{c}{c+\vec v\cdot\vec u}f
+\]
+
+\end{document}
