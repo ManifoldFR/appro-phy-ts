@@ -9,6 +9,7 @@
 \usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
 \usepackage{tikz}
+\usetikzlibrary{shapes,calc}
 \usepackage[shortlabels]{enumitem}
 \usepackage{comment}
 
@@ -27,7 +28,7 @@
 
 %% Titling configuration
 \pretitle{\begin{center}\LARGE}
-\title{\textsc{Effet Doppler}}
+\title{\textsc{Autour de l'Effet Doppler}}
 \posttitle{\par\end{center}\vspace{-1.2em}}
 
 \preauthor{}
@@ -49,21 +50,27 @@ Vous connaissez certainement le principe de la décomposition de Fourier: on peu
 
 Pour cette raison, on peut simplifier le problème et se placer dans le cas où le signal émis est monochromatique, c'est-à-dire composé d'une seule longueur d'onde $\lambda = c/f$, où $c$ est la célérité des ondes dans le milieu et $f$ la fréquence correspondante.
 
-
 Il se comprend de la façon suivante : entre chaque émission d'un front d'onde s'écoule une durée égale à la période $T=\lambda/c=1/f$ de la source, celle-ci se déplace de $\vec v T$.
 
 \begin{center}
-\begin{tikzpicture}
-\draw [thick, blue, ->] (0,0)--(2,1);
-\node [below left] (S) at (0,0) {Source};
-\coordinate at (0,0);
-\end{tikzpicture}
+	\begin{tikzpicture}
+	\node (S) at (0,0) [circle, fill, inner sep=2pt, label={260:Source $S$}]{};
+	\draw [blue, ->,thick] (S) -- node[label={110:$\vec v$}] {} (1,0.5) -- (2,1);
+	
+	\foreach \r in {0.7,1.4,2.1,2.8}
+	\draw (-0.5*\r,-0.25*\r) circle (\r) [red, dashed, thick];
+	
+	\node (M) at (4,0) [circle,fill,inner sep=2pt,label={$P$}]{};
+	\draw[->,thick] (S) -- node[label={-25:$\vec u$}]{} ++(2,0);
+	\end{tikzpicture}
 \end{center}
 
-Si $\vec u$ représente la ligne de visée de l'observateur, la distance entre les fronts d'ondes émis entre $t$ et $t+T$ est $\tilde{\lambda} = (c+\vec v\cdot\vec u)T$, de sorte que la fréquence du signal perçu est
+Si $\vec u$ représente la ligne de visée de l'observateur, la distance entre les fronts d'ondes émis entre $t$ et $t+T$ est $\lambda' = (c-\vec v\cdot\vec u)T$, de sorte que la fréquence du signal perçu est
 
 \[
-\tilde{f} = \frac{c}{\tilde{\lambda}} = \frac{c}{(c+\vec u \cdot \vec u)T} = \frac{c}{c+\vec v\cdot\vec u}f
+f' = \frac{c}{\tilde{\lambda}} = \frac{c}{(c-\vec v \cdot \vec u)T} = \frac{c}{c-\vec v\cdot\vec u}f.
 \]
+
+En effet, la distance entre deux fronts est la longueur d'onde initiale $\lambda = cT$, amputée du déplacement de la source dans la direction de l'observateur (puisque ce déplacement fait que la nouvelle émission sera effectuée plus proche de celui-ci), c'est à dire $\vec v T \cdot \vec u = (\vec v \cdot \vec u)T$.
 
 \end{document}
