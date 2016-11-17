@@ -42,35 +42,67 @@
 
 \begin{abstract}
 	L'effet Doppler est le phénomène par lequel la perception d'un signal (acoustique, électromagnétique) émis par une source en mouvement relativement à un observateur présente, pour un signal monochromatique composé d'une seule fréquence, un décalage de celle-ci -- ou, pour un signal composé, un décalage de son spectre en fréquence.
-	
-	On va ici aller plus loin dans l'explication de ce phénomène, et démontrer la formule donnée dans le cours.
 \end{abstract}
 
-Vous connaissez certainement le principe de la décomposition de Fourier: on peut écrire tout signal comme somme de signaux monochromatiques, de la forme $A(\omega)\cos(\omega t - \phi(\omega))$, où $A(\omega)$ est l'amplitude de l'harmonique $\omega$ du signal initial et $\phi(\omega)$ sa phase. Vous avez mis en application ce principe en TP, lorsque vous avez réalisé à l'aide d'un logiciel les spectres en fréquence -- concrètement, les courbes de la fonction $A(\omega)$ -- de plusieurs signaux.
+\section{Introduction: le cas polychromatique}
 
-Pour cette raison, on peut simplifier le problème et se placer dans le cas où le signal émis est monochromatique, c'est-à-dire composé d'une seule longueur d'onde $\lambda = c/f$, où $c$ est la célérité des ondes dans le milieu et $f$ la fréquence correspondante.
+On interprète souvent ce phénomène comme étant la perception d'une fréquence différente que celle émise par une source animée d'un mouvement. Le problème, c'est qu'avec des signaux quelconques, les notions de fréquence ou de longueur d'onde n'ont pas vraiment de sens : on peut parler de fréquence, à la rigueur, lorsque le signal est périodique, mais pour définir une longueur d'onde la signal doit être \textit{monochromatique} (par exemple, un son pur en acoustique). Comment donc décrire de façon pertinente l'effet Doppler quand on parle d'un signal quelconque qui serait néanmoins modifié par un déplacement de la source qui l'émet ?
 
-Il se comprend de la façon suivante : entre chaque émission d'un front d'onde s'écoule une durée égale à la période $T=\lambda/c=1/f$ de la source, celle-ci se déplace de $\vec v T$.
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.6\textwidth]{fft.png}
+	\caption{Un exemple de spectre en fréquence}
+\end{figure}
+
+On peut lever le problème en se ramenant au cas des signaux monochromatiques. Vous connaissez certainement le principe de la décomposition de Fourier: on peut écrire tout signal comme somme de signaux monochromatiques, de la forme $A(f)\cos(2\pi f t - \phi(f))$, où $A(f)$ est l'amplitude de l'harmonique de fréquence $f$ du signal initial et $\phi(f)$ sa phase. Vous avez mis en application ce principe en TP, lorsque vous avez réalisé à l'aide d'un logiciel les spectres en fréquence -- concrètement, les courbes de la fonction $A(f)$ -- de plusieurs signaux.
+
+Pour cette raison, on peut simplifier le problème et se placer dans le cas où le signal émis est monochromatique: il est donc composé d'une seule longueur d'onde $\lambda$, à laquelle correspond une fréquence $f = c/\lambda$ où $c$ est la célérité des ondes dans le milieu.
+
+\section{Démonstration de la formule de l'effet Doppler pour un signal de longueur d'onde $\lambda$}
+
+Entre chaque émission d'un front d'onde s'écoule une durée égale à la période $T=\lambda/c=1/f$ de la source, celle-ci se déplace de $\vec v T$.
 
 \begin{center}
 	\begin{tikzpicture}
-	\node (S) at (0,0) [circle, fill, inner sep=2pt, label={260:Source $S$}]{};
-	\draw [blue, ->,thick] (S) -- node[label={110:$\vec v$}] {} (1,0.5) -- (2,1);
+	\tikzset{dot/.style={circle,fill,inner sep=2pt}}
+	\node (S) at (0,0) [dot, label={260:Source $S$}]{};
+	\draw [blue, ->,thick] (S) -- node[label={[black]90:$\vec v$}] {} (1,0.5) -- (2,1);
 	
 	\foreach \r in {0.7,1.4,2.1,2.8}
 	\draw (-0.5*\r,-0.25*\r) circle (\r) [red, dashed, thick];
 	
-	\node (M) at (4,0) [circle,fill,inner sep=2pt,label={$P$}]{};
+	\node (M) at (4,0) [dot,label={$P$}]{};
 	\draw[->,thick] (S) -- node[label={-25:$\vec u$}]{} ++(2,0);
 	\end{tikzpicture}
 \end{center}
 
-Si $\vec u$ représente la ligne de visée de l'observateur, la distance entre les fronts d'ondes émis entre $t$ et $t+T$ est $\lambda' = (c-\vec v\cdot\vec u)T$, de sorte que la fréquence du signal perçu est
-
-\[
-f' = \frac{c}{\tilde{\lambda}} = \frac{c}{(c-\vec v \cdot \vec u)T} = \frac{c}{c-\vec v\cdot\vec u}f.
-\]
+Si le vecteur \textbf{unitaire} $\vec u$ représente la ligne de visée de l'observateur, la distance entre les fronts d'ondes émis entre $t$ et $t+T$ est 
+\begin{equation}\boxed{
+\lambda' = (c-\vec v\cdot\vec u)T.}
+\end{equation}
 
 En effet, la distance entre deux fronts est la longueur d'onde initiale $\lambda = cT$, amputée du déplacement de la source dans la direction de l'observateur (puisque ce déplacement fait que la nouvelle émission sera effectuée plus proche de celui-ci), c'est à dire $\vec v T \cdot \vec u = (\vec v \cdot \vec u)T$.
+
+\begin{center}
+	\begin{tikzpicture}
+	\tikzset{dot/.style={circle,fill,inner sep=1.5pt}}
+	\node[dot, label={180:$S(t)$}](S1) at (0,0) {};
+	\node[dot, label=$S(t+T)$](S2) at (1.5,2) {};
+	\node[dot, label=$P$](P) at (3,0) {};
+	
+	\draw[->,blue,thick] (S1)-- (0.75,1) node[label={180:$\vec vT$}]{} --(S2);
+	\draw[-,red,dashed] (S1)--(P);
+	\draw[->,thick] (S1)-- (0.5,0) node[label={30:$\vec{u}$}] {};
+	
+	\draw[dotted] (S2)--(1.5,0) node[dot,inner sep=1pt](pS2){};
+	\draw[<->,gray] (0,-0.2) -- (.75,-0.2) node[label={[black]270:$(\vec vT)\cdot \vec u$}]{} -- (1.5,-0.2);
+	\end{tikzpicture}
+\end{center}
+
+La fréquence du signal perçu est alors
+\begin{equation}
+	f' = \frac{c}{\tilde{\lambda}} = \frac{c}{(c-\vec v \cdot \vec u)T}\quad\text{soit}\quad
+	\boxed{f' = \frac{c}{c-\vec v\cdot\vec u}f.}
+\end{equation}
 
 \end{document}
