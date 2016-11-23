@@ -9,6 +9,7 @@
 \usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
 \usepackage{tikz}
+\usepackage[locale = FR, inter-unit-product = .]{siunitx}
 \usetikzlibrary{shapes,calc}
 \usepackage[shortlabels]{enumitem}
 \usepackage{comment}
@@ -25,6 +26,11 @@
 \newcommand{\CC}{\mathbb C}
 \newcommand{\K}{\mathbb K}
 \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+
+%% Math environments
+\theoremstyle{definition}
+\newtheorem{exo}{Exercice}
 
 %% Titling configuration
 \pretitle{\begin{center}\LARGE}
@@ -78,7 +84,7 @@ Entre chaque émission d'un front d'onde s'écoule une durée égale à la péri
 
 Si le vecteur \textbf{unitaire} $\vec u$ représente la ligne de visée de l'observateur, la distance entre les fronts d'ondes émis entre $t$ et $t+T$ est 
 \begin{equation}\boxed{
-\lambda' = (c-\vec v\cdot\vec u)T.}
+\lambda' = \lambda - (\vec vT)\cdot\vec u =  (c-\vec v\cdot\vec u)T.}
 \end{equation}
 
 En effet, la distance entre deux fronts est la longueur d'onde initiale $\lambda = cT$, amputée du déplacement de la source dans la direction de l'observateur (puisque ce déplacement fait que la nouvelle émission sera effectuée plus proche de celui-ci), c'est à dire $\vec v T \cdot \vec u = (\vec v \cdot \vec u)T$.
@@ -104,5 +110,52 @@ La fréquence du signal perçu est alors
 	f' = \frac{c}{\tilde{\lambda}} = \frac{c}{(c-\vec v \cdot \vec u)T}\quad\text{soit}\quad
 	\boxed{f' = \frac{c}{c-\vec v\cdot\vec u}f.}
 \end{equation}
+
+\begin{exo}
+	Démontrer la formule approchée
+	\begin{equation}
+		f' \simeq \left(1+\frac{\vec v\cdot \vec u}{c}\right)f
+	\end{equation}
+	pour $\norm{\vec v}\ll c$.
+	
+	On donne que pour $x\ll 1$, $\dfrac{1}{1-x}\simeq 1+x$.
+\end{exo}
+
+\begin{exo}
+	On considère un véhicule de police traversant une intersection dont les rues sont à un angle de 30 degrés, à une vitesse de \SI{70}{\kilo\meter\per\hour}.
+	 	
+	Un microphone dans l'habitacle du véhicule enregistre le son émis par la sirène à une fréquence d'échantillonnage de \SI{2048}{\hertz}. Le signal reconstitué, ainsi que son spectre en fréquence sont fournis ci-dessous.
+	
+	\begin{figure}[h]
+		\includegraphics[width=\textwidth]{python-scripts/sirene.pdf}
+	\end{figure}
+	
+	Un observateur se situe dans la rue croisant celle traversée par le véhicule. Quelles sont les fréquences principales du son qu'il entend quand la voiture passe juste devant lui ? Dessiner son spectre de Fourier. Proposer une expression du signal $s_\mathrm{reçu}(t)$ correspondant.
+\end{exo}
+
+\section{Effet Doppler-Fizeau}
+
+L'effet Doppler se généralise à toute situation mettant en jeu des ondes, y compris en dehors de l'acoustique. Dans le domaine des ondes électromagnétiques, on observe un effet Doppler lumineux : la lumière reçue par un observateur provenant d'une source lumineuse en mouvement change de couleur. Ou, du moins, on peut observer un décalage dans le spectre de la lumière reçue par rapport à un spectre d'émission (ou d'absorption...) de référence.
+
+En astronomie, on l'utilise pour évaluer, à partir de ce décalage, la vitesse à laquelle se déplace des sources de lumière (astres, galaxies...) très éloignées de nous. On peut également détecter le mouvement de nébuleuses en cherchant un déplacement des raies d'absorption caractérisant les éléments présents dans les poussières qui les constituent.
+
+Lorsque le décalage en fréquence se fait vers le domaine du bleu, on parle de \textit{blue shift}; vers le rouge, on parle de \textit{red shift}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{redshift1.jpg}
+	\caption{Spectre d'absorption d'un corps au repos, et spectre \textit{redshifté} lors du mouvement de celui-ci.}
+\end{figure}
+
+Dans le cas où la source est à une vitesse \textit{non-relativiste}, c'est-à-dire $v\ll c$, les formules précédentes sont toujours valables (sinon, il faut corriger en utilisant la théorie de la relativité restreinte... bref.)
+
+\begin{exo}
+	Les \textit{raies de Balmer} sont les raies du spectre d'émission de l'hydrogène qui correspondent aux transitions énergétiques vers l'état d'énergie $n=2$. La première raie, notée H$\alpha$, correspondant à la transition énergétique $3\to 2$, a pour longueur d'onde $\lambda = \SI{656.3}{\nano\meter}$.
+	
+	\begin{enumerate}
+		\item Quelle est sa couleur ?
+		\item On considère un corps contenant de l'hydrogène. Une étude du spectre lumineux reçu montre un décalage de la série des raies de Balmer plaçant H$\alpha$ une longueur d'onde de $\SI{682.1}{\nano\meter} $. L'objet se rapproche-t-il ou s'éloigne-t-il ? Quelle est sa vitesse ? Sommes-nous toujours dans un cadre non-relativiste ?
+	\end{enumerate}
+\end{exo}
 
 \end{document}
