@@ -1,4 +1,4 @@
-PWD C:/Users/Will Johnson/Documents/LaTeX/appro-phy-ts
+PWD C:/Users/Will Johnson/Documents/LaTeX/appro-phy-ts/parts/doppler
 INPUT C:/Users/Will Johnson/AppData/Local/MiKTeX/2.9/miktex/data/le/xetex/xelatex.fmt
 INPUT doppler.tex
 OUTPUT doppler.log
@@ -304,6 +304,6 @@ INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmex10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msam10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT C:/Program Files/MiKTeX 2.9/fonts/tfm/public/cm/cmr12.tfm
-INPUT python-scripts/sirene.pdf
+INPUT sirene.pdf
 INPUT redshift1.jpg
 INPUT doppler.aux

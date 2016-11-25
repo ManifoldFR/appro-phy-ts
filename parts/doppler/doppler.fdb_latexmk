@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1479944078 "doppler.tex" "doppler.pdf" "doppler" 1479944084
+["pdflatex"] 1480015465 "doppler.tex" "doppler.pdf" "doppler" 1480015475
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/adobe/zapfding/pzdr.tfm" 1136768654 1528 7e12f4c0fcf5a072cebdcfbfc610f54c ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1233951848 1004 54797486969f23fa377b128694d548df ""
   "C:/Program Files/MiKTeX 2.9/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1233951854 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -172,14 +172,14 @@
   "C:/Users/Will Johnson/AppData/Roaming/MiKTeX/2.9/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/Will Johnson/AppData/Roaming/MiKTeX/2.9/tex/latex/xcolor/xcolor.sty" 1463135581 57049 34128738f682d033422ca125f82e5d62 ""
   "C:/Users/Will Johnson/AppData/Roaming/MiKTeX/2.9/tex/xelatex/xetexconfig/geometry.cfg" 1169251881 322 f4a6234bc28bf70659404393c15d3854 ""
-  "doppler.aux" 1479944083 1494 b85f04ff8c27b7408a0b5685112fefcc ""
-  "doppler.out" 1479944083 258 670b05643693991f0b70808d1a8402c7 ""
-  "doppler.tex" 1479944066 8714 5202c3ab4b1120575dd8107db012c1bc ""
+  "doppler.aux" 1480015475 1494 b85f04ff8c27b7408a0b5685112fefcc ""
+  "doppler.out" 1480015475 258 670b05643693991f0b70808d1a8402c7 ""
+  "doppler.tex" 1480015459 8699 e7c615e6e1ae590540ad869bc49626c2 ""
   "fft.png" 1479855113 4540 1b4650eead09ecdbfd49f534e1b656f9 ""
-  "python-scripts/sirene.pdf" 1479944021 35902 807938ba2c5995c851b3ac3e76e13ca1 ""
   "redshift1.jpg" 1479943366 17451 3169e8679aaf0ba421c89e8a381a6503 ""
+  "sirene.pdf" 1479944021 35902 807938ba2c5995c851b3ac3e76e13ca1 ""
   (generated)
-  "doppler.pdf"
   "doppler.out"
-  "doppler.aux"
+  "doppler.pdf"
   "doppler.log"
+  "doppler.aux"
