@@ -36,6 +36,7 @@ def make_freq():
     start, end = axi.get_xlim()
     axi.xaxis.set_ticks(np.arange(start, end, 50))
     axi.grid()
+    return af
 
 make_time(); make_freq()
 fig.tight_layout()
