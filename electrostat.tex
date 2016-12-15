@@ -17,7 +17,9 @@
 
 \setdefaultlanguage{french}
 
+
 %% Math commands
+\renewcommand{\vec}[1]{\mathbf{#1}}
 \renewcommand\epsilon\varepsilon
 \renewcommand\phi\varphi
 \newcommand{\N}{\mathbb N}
@@ -83,8 +85,8 @@ On dit que le système est \textit{électriquement neutre} si $Q=0$. Un système
 
 \begin{figure}[H]	
 	\centering
-	\begin{tikzpicture}
-	\tikzset{dot/.style={circle,fill,inner sep=2pt}}
+    \begin{tikzpicture}
+    \tikzset{dot/.style={circle,fill,inner sep=2pt}};
 	\node (H1) at (-0.65,-0.8) [dot,label={below left:H},label={above left:$+\delta e$}]{};
 	\node (H2) at (0.65,-0.8) [dot,label={below right:H},label={above right:$+\delta e$}]{};
 	\node (O) at (0,0) [dot,label={left:O},label={above right:$-2\delta e$}]{};	
@@ -101,7 +103,7 @@ On dit que le système est \textit{électriquement neutre} si $Q=0$. Un système
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.36\textwidth]{sel_cristal.png}
+	\includegraphics[width=0.36\textwidth]{parts/electrostat/sel_cristal.png}
 	\caption{La structure cristalline du sel. Les ions chlorure et sodium sont arrangés dans un motif cubique}
 \end{figure}
 
@@ -118,17 +120,38 @@ Lorsque deux corps chargés électriquement sont mis en présence, comme un bout
 
 Ce comportement est dû au fait que la présence de charges modifie les propriétés de l'espace en créant un \textit{champ électrique}, qui confère à chaque point de l'espace une direction privilégiée dans laquelle orienter les particules chargées et une intensité avec laquelle le faire. Ainsi, une charge qui se retrouve en présence d'une autre est happée par les effets du champ électrique crée par cette dernière.
 
-L'électrostatique classique (par opposition aux contextes de la théorie de la relativité d'\textsc{Einstein} ou la mécanique quantique de Max \textsc{Planck}, David \textsc{Hilbert}, Erwin \textsc{Schrödinger}) est régie par les équations de \textsc{Maxwell}. Elles expriment le fait que les lignes de champ du champ électrique ne s'enroulent pas sur elles-mêmes, s'intensifient et divergent en présence d'une charge.
+Le \textit{champ électrique} est un champ vectoriel, c'est-à-dire une fonction d'une variable vectorielle (la position) à valeurs vectorielles (la direction et l'intensité du champ). On le note, classiquement, $\vec{E}$. La situation électrostatique correspond au cas où le champ électrique $\vec{E}$ est indépendant du temps.
+
+L'électrostatique << classique >> (par opposition aux contextes de la théorie de la relativité d'\textsc{Einstein} ou la mécanique quantique de \textsc{Planck}, \textsc{Hilbert}, \textsc{Schrödinger}) est régi par les équations de \textsc{Maxwell} (1831-1879). 
+
 
 \subsection{Champ électrique créé par une charge ponctuelle}
 
-Pour le cas d'une charge $q$ réduite à un point, la résolution des équations de \textsc{Maxwell} conduit à la solution suivante:
-	\[ E(r) = \frac{1}{4\pi\epsilon_0}\frac{q}{r^2} \]
-où $r$ est la distance à laquelle on se situe de la charge ponctuelle source du champ, et $\epsilon_0\approx\SI{8.854e-12}{\farad\per\meter}$ est la permittivité électrique du vide (sa tendance à laisser passer les champs électriques).
+Pour le cas d'une charge ponctuelle $q$ située en l'origine, les équations de \textsc{Maxwell} conduisent à la solution
+	\[ \vec{E}(\vec{r}) = \frac{1}{4\pi\epsilon_0}\frac{q}{\norm{\vec{r}}^3}\vec{r} \]
+où $\epsilon_0\approx\SI{8.854e-12}{\farad\per\meter}$ est la permittivité électrique du vide (sa tendance à laisser passer les champs électriques). Le champ est donc \textit{radial} et ne dépend que de la distance $r=\norm{\vec{r}}$ : $\vec{E} = E(r)\vec{e}_r$, et pour $r=\mathrm{OM}$ on retrouve la formule familière
+	\[
+    E = \frac{1}{4\pi\epsilon_0}\frac{q}{\mathrm{OM}^2}.
+    \]
+
+\begin{figure}[h]
+	\centering
+    \begin{tikzpicture}
+    \tikzset{dot/.style={circle,fill,inner sep=2pt}};
+	\node (ch) at (0,0) [dot,label={$q$}]{};
+    
+	\end{tikzpicture}
+    \caption{Champ électrique créé par une charge ponctuelle $q$ placé en l'origine $O$.}
+\end{figure}
 
 \begin{rap}
-	On pose souvent $k=\frac{1}{4\pi\epsilon_0}$, qui vaut $\SI{9.0e9}{\meter\per\farad}.$
+	On a $k=\dfrac{1}{4\pi\epsilon_0}=\SI{9.0e9}{\meter\per\farad}.$
 \end{rap}
+
+
+
+
+
 
 
 

@@ -1,12 +1,45 @@
-\documentclass[../main]{subfiles}
+\documentclass{article}
+\usepackage{polyglossia}
+\usepackage[a4paper]{geometry}
+\usepackage{mathtools, amssymb, amsfonts}
+\usepackage{amsthm}
+\usepackage{fontspec}
+\usepackage{titling}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usepackage[locale = FR, exponent-product = \cdot, inter-unit-product = .]{siunitx}
+\usetikzlibrary{shapes,calc}
+\usepackage[shortlabels]{enumitem}
+\usepackage{comment}
+
+\setdefaultlanguage{french}
+
+%% Math commands
+\renewcommand\epsilon\varepsilon
+\renewcommand\phi\varphi
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\CC}{\mathbb C}
+\newcommand{\K}{\mathbb K}
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+
+%% Math environments
+\theoremstyle{definition}
+\newtheorem{exo}{Exercice}
+
+\theoremstyle{remark}
+\newtheorem*{rap}{Rappel}
+
+\title{Oscillateurs}
 
 \begin{document}
-
-\onlyinsubfile{
-    \begin{center}
-    {\Huge \textsc{Compléments:\\ Oscillateurs}}
-    \end{center}
-}
+\maketitle
 
     Les oscillateurs sont des systèmes physiques omniprésents dans notre monde moderne : les suspensions d'un véhicule, un pendule, l'horloge du microprocesseur d'un système informatique...
 
