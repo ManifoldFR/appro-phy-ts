@@ -9,9 +9,10 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
+\usepackage{caption,subcaption}
 \usepackage{tikz}
 \usepackage[locale = FR, exponent-product = \cdot, inter-unit-product = .]{siunitx}
-\usetikzlibrary{shapes,calc}
+\usetikzlibrary{shapes,calc,angles,decorations.markings}
 \usepackage[shortlabels]{enumitem}
 \usepackage{comment}
 
@@ -19,7 +20,7 @@
 
 
 %% Math commands
-\renewcommand{\vec}[1]{\mathbf{#1}}
+\renewcommand{\vec}[1]{\boldsymbol{\mathbf{#1}}}
 \renewcommand\epsilon\varepsilon
 \renewcommand\phi\varphi
 \newcommand{\N}{\mathbb N}
@@ -125,32 +126,111 @@ Le \textit{champ électrique} est un champ vectoriel, c'est-à-dire une fonction
 L'électrostatique << classique >> (par opposition aux contextes de la théorie de la relativité d'\textsc{Einstein} ou la mécanique quantique de \textsc{Planck}, \textsc{Hilbert}, \textsc{Schrödinger}) est régi par les équations de \textsc{Maxwell} (1831-1879). 
 
 
+La force exercée par un champ électrique $\vec{E}$ sur une particule de charge $q$ est donnée par
+	\[ \vec{F}_\mathrm{él} = q\vec{E}. \]
+
 \subsection{Champ électrique créé par une charge ponctuelle}
 
 Pour le cas d'une charge ponctuelle $q$ située en l'origine, les équations de \textsc{Maxwell} conduisent à la solution
 	\[ \vec{E}(\vec{r}) = \frac{1}{4\pi\epsilon_0}\frac{q}{\norm{\vec{r}}^3}\vec{r} \]
-où $\epsilon_0\approx\SI{8.854e-12}{\farad\per\meter}$ est la permittivité électrique du vide (sa tendance à laisser passer les champs électriques). Le champ est donc \textit{radial} et ne dépend que de la distance $r=\norm{\vec{r}}$ : $\vec{E} = E(r)\vec{e}_r$, et pour $r=\mathrm{OM}$ on retrouve la formule familière
+où $\epsilon_0\approx\SI{8.854e-12}{\farad\per\meter}$ est la permittivité électrique du vide (sa tendance à laisser passer les champs électriques). Le champ est donc \textit{radial} et ne dépend que de la distance $r=\norm{\vec{r}}$ : $\vec{E} = E(r)\vec{e}_r$, et pour $r = OM$ on retrouve la formule familière
 	\[
-    E = \frac{1}{4\pi\epsilon_0}\frac{q}{\mathrm{OM}^2}.
+    E = \frac{1}{4\pi\epsilon_0}\frac{q}{{OM}^2}.
     \]
 
 \begin{figure}[h]
 	\centering
-    \begin{tikzpicture}
-    \tikzset{dot/.style={circle,fill,inner sep=2pt}};
-	\node (ch) at (0,0) [dot,label={$q$}]{};
-    
-	\end{tikzpicture}
-    \caption{Champ électrique créé par une charge ponctuelle $q$ placé en l'origine $O$.}
+	\begin{subfigure}[b]{0.4\textwidth}
+		\begin{tikzpicture}
+		\tikzset{dot/.style={circle,fill,inner sep=2pt}};
+		\tikzset{->-/.style={decoration={
+					markings,
+					mark=at position #1 with {\arrow{>}}},postaction={decorate}}}
+		
+		\clip (-3,-1.5) rectangle (3,1.5);
+		\foreach \a in {0,30,60,90,120,150,180,210,240,270,300,330}
+		\draw [->-=0.45,color=blue!70,thick] (0,0)--(\a:3.2);
+		
+		\node (ch) at (0,0) [dot,label={[label distance = 10pt]-3:$q$}]{};
+		\end{tikzpicture}
+		\caption{Champ créé par une charge positive $q>0$. Les lignes de champ sont orientées vers l'extérieur: le champ est \textit{centrifuge}.}
+	\end{subfigure}\qquad
+	\begin{subfigure}[b]{0.4\textwidth}
+		\begin{tikzpicture}
+		\tikzset{dot/.style={circle,fill,inner sep=2pt}};
+		\tikzset{->-/.style={decoration={
+					markings,
+					mark=at position #1 with {\arrow{>}}},postaction={decorate}}}
+		
+		\clip (-3,-1.5) rectangle (3,1.5);
+		\foreach \a in {0,30,60,90,120,150,180,210,240,270,300,330}
+		\draw [->-=0.57,color=red!70,thick] (\a:3.2)--(0,0);
+		
+		\node (ch) at (0,0) [dot,label={[label distance = 10pt]93:$q$}]{};
+		\end{tikzpicture}
+		\caption{Champ créé par une charge négative $q<0$. Les lignes de champ sont orientées vers l'origine : le champ est \textit{centripète.}}
+	\end{subfigure}
+    \caption{Champ électrique créé par une charge ponctuelle $q$.}
 \end{figure}
 
 \begin{rap}
 	On a $k=\dfrac{1}{4\pi\epsilon_0}=\SI{9.0e9}{\meter\per\farad}.$
 \end{rap}
 
+Ainsi, étant donnée une deuxième particule de charge $q_0$ en un point $\vec{r}$, la force électrostatique exercée sur elle par la charge ponctuelle $q$ placée en l'origine $O$ est
+	\[ 
+	\vec{F} = q_0\vec{E}(\vec{r}) = \frac{1}{4\pi\epsilon_0}\frac{q_0q}{\norm{\vec{r}}^3}\vec{r}.
+	 \]
+
+On retrouve qu'elle est \textit{répulsive} (va dans le sens de $\vec{r}$, donc tend à éloigner les deux charges)  si les deux charges sont identiques (soit $q_0q>0$), et qu'elle est \textit{attractive} (va dans le sens contraire, donc tend à rapprocher les charges) soit si les deux charges sont contraires (soit $q_0q<0$).
+
+\begin{exo}
+	On considère deux charges identiques $q$ placées de part et d'autre de l'origine aux points de coordonnées $(-a,0)$ et $(a,0)$ ($a>0$) respectivement. On aimerait savoir ce qu'il se passe au niveau du champ électrique créé en même temps par ces deux charges.
+\end{exo}
+
+\subsection{Dipôle électrique}
+
+\begin{center}
+	\textit{<< Pourquoi utilise-t-on si souvent l'eau comme solvant ? >>}
+\end{center}
+
+Un dipôle électrique est un système globalement neutre où des charges sont réparties de sorte à ce que que les barycentres des charges négatives et des charges positives ne soient pas confondus. On peut alors se ramener à un système de deux charges opposées $-q$ et $+q$ ($q>0$).
+
+On associe à un dipôle une grandeur vectorielle $\vec{p}$, appelée \textit{moment dipolaire}, et qui prend pour expression
+	\[ 
+	\vec{p} = qd\vec{u}
+	 \]
+avec $d$ la distance entre les deux charges et $\vec{u}$ un vecteur unitaire.
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+	\tikzset{dot/.style={circle,fill,inner sep=2pt}};
+	
+	\node[draw,circle,label={right:$-q$}] (N) at (0,0) {$-$};
+	\node[draw,circle,label={right:$+q$}] (P) at (0,2.5) {$+$};
+	\draw[color=gray!80,thick] (N)--(P);
+	\draw[color=black,thick,->] (N)--(0,0.9) node[midway,right]{$\vec{u}$};
+	
+	
+	\draw[->,color=red!90,thick] (-0.5,0) -- (-0.5,2.5) node[midway,sloped,above]{$\vec{p}$};
+	\end{tikzpicture}
+	\caption{Dipôle électrique élémentaire constitué de deux charges $+q$ et $-q$.}
+\end{figure}
+
+Une molécule est dite \textit{polaire} lorsque l'électronégativité des éléments la constituant lui donne une structure de dipôle électrique. En effet, le déplacement des électrons intervenant dans des liaisons covalentes faisant apparaître des charges partielles, il se peut que le barycentre de celles qui sont positives et celui de celles qui sont négatives ne soient pas confondus. D'où un dipôle.
 
 
+Étant donné leur structure originale, où deux charges de signes opposés sont liées, on peut s'attendre à ce que les interactions entre un dipôle et un champ électrique amènent des dimensions nouvelles par rapport à celles entre une charge seule et un champ.
 
+\begin{exo}
+	La molécule d'eau est un exemple de molécule polaire. On donne $\delta\approx\num{0.22}$ et que la longueur de la liaison de covalence $\mathrm{H}-\mathrm{O}$ est de $\SI{100}{\pico\meter}$.
+	\begin{enumerate}
+		\item Proposer un modèle de la molécule d'eau comme dipôle électrique. Préciser la distance $d$ entre les barycentres des charges, calculer la norme $p$ du moment dipolaire.
+		\item Expliquer pourquoi, quand on approche un peigne fraîchement sorti de ses cheveux d'un filet d'eau, l'eau est déviée malgré le fait que la molécule d'eau est électriquement neutre.
+		\item Pourquoi l'eau est-elle, finalement, un bon solvant pour les ions ?
+	\end{enumerate}
+\end{exo}
 
 
 
