@@ -9,15 +9,18 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
+\usepackage{caption,subcaption}
 \usepackage{tikz}
 \usepackage[locale = FR, exponent-product = \cdot, inter-unit-product = .]{siunitx}
-\usetikzlibrary{shapes,calc}
+\usetikzlibrary{shapes,calc,angles,decorations.markings}
 \usepackage[shortlabels]{enumitem}
 \usepackage{comment}
 
 \setdefaultlanguage{french}
 
+
 %% Math commands
+\renewcommand{\vec}[1]{\boldsymbol{\mathbf{#1}}}
 \renewcommand\epsilon\varepsilon
 \renewcommand\phi\varphi
 \newcommand{\N}{\mathbb N}
@@ -36,7 +39,17 @@
 \theoremstyle{remark}
 \newtheorem*{rap}{Rappel}
 
-\title{Oscillateurs}
+%% Titling configuration
+\pretitle{\begin{center}\LARGE\textsf }
+	\title{Oscillateurs}
+	\posttitle{\par\end{center}\vspace{-1.2em}}
+
+\preauthor{}
+\author{}
+\postauthor{}
+
+\date{\today}
+
 
 \begin{document}
 \maketitle
