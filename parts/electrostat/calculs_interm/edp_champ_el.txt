@@ -1,0 +1,3 @@
+r\partial_r^2E_z(r,\omega) + \partial_rE_z(r,\omega) +\frac{\omega}{c}rE_z(r,\omega) = \frac{I(\omega)}{2\pi}\delta(r) \\
+
+E_z(r,\omega) = A(\omega)J_0(kr) + \left(B(\omega) + \frac{I(\omega)}{4} \right )Y_0(kr), \quad k = \frac{\omega}{c}

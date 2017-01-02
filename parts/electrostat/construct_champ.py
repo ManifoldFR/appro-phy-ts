@@ -3,11 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 
-wx,wy = 4,4
+wx,wy = 800,600
 
-grx = np.linspace(-wx,wx,64)
-gry = np.linspace(-wy,wy,64)
-X,Y = np.meshgrid(grx,gry)
+Y,X = np.ogrid[-wx:wx:64j, -wy:wy:64j]
 
 def field(q,r0,x,y):
     """Champ électrique créé par une charge q à la position r0"""
@@ -34,11 +32,14 @@ def build_stream(charges, customTitle=None):
     fig = plt.figure(1)
     ax = fig.add_subplot(111)
     
-    ax.streamplot(X,Y,Ex,Ey, arrowstyle='->',arrowsize=1,color=color, cmap=plt.cm.inferno,density=2)
+    ax.streamplot(X,Y,Ex,Ey, arrowstyle='->', arrowsize=0.6, color=color, cmap=plt.cm.inferno,density=3)
+    
+    # Taille des charges ponctuelles
+    radius = (wx*wx+wy*wy)**0.5
     
     charge_colors = {True: '#cc0000', False: '#0000aa'}
     for q, pos in charges:
-        ax.add_artist(Circle(pos, 0.05, color=charge_colors[q>0]))
+        ax.add_artist(Circle(pos, 0.01*radius, color=charge_colors[q>0]))
     
     if customTitle:
         ax.set_title(customTitle)
@@ -51,17 +52,12 @@ def build_stream(charges, customTitle=None):
     return fig, ax # Renvoie la figure et la case où est tracé le champ
 
 
-# Charge: liste de couples (valeur, pos)
-charges=[(1.4e-9,(1,0)),(-1.4e-9,(-1,0))]
-charges2 = [(1.4e-9,(1,0)),(1.4e-9,(-1,0))]
-charges3 = [(-1.4e-9,(-1,0)),(1.4e-9,(1,0))]
 
-
-def parti(x0,v0, onStream = True):
+def parti(x0,v0, ch, fax = None):
     """Donne la trajectoire d'une particule chargée de charge q, de position initiale x0,
     de vitesse initiale v0, dans le dernier champ construit"""
     
-    champ = build_field(charges3)
+    champ = build_field(ch)
     
     q = 1e11
     
@@ -79,15 +75,33 @@ def parti(x0,v0, onStream = True):
     
     x,y,vx,vy = zip(*sol)
     
-    if onStream:
-        fig, ax = build_stream(charges3)
-        ax.set_title("Champ électrique, trajectoire d'une particule" "\n" r"de charge $q=%g$" % q)
+    if not(fax):
+        fig, ax = build_stream(ch)
+        #ax.set_title("Champ électrique, trajectoire d'une particule" "\n" r"de charge $q=%g$" % q)
     else:
-        fig, ax = plt.subplots(1,1)
-        ax.grid()
-        ax.set_title(r"Trajectoire d'une particule chargée de charge $q=%g$" "\n" r"dans le champ électrique" % q)
-    ax.plot(x,y, 'r',linewidth=2)
+        fig,ax=fax
+    ax.set_xlim((-wx,wx))
+    ax.set_ylim((-wy,wy))
+    ax.set_aspect('equal')
+        
+    ax.plot(x,y, 'r',linewidth=1.3)
     fig.tight_layout()
-    return fig,sol
-    
-    
+    return fig,ax
+
+
+
+# Charge: liste de couples (valeur, pos)
+ch1  = [(-1.4e-9,(0,0))]
+ch2 = [(1.4e-9,(1,0)),(1.4e-9,(-1,0))]
+ch3 = [(-1.4e-9,(-1,0)),(1.4e-9,(1,0))]
+
+def dipole_eau():
+    de=0.22*1.6e-19
+    angHO = 104.5*np.pi/360
+    lenHO = 95.8
+    global x,y
+    x = -lenHO*np.cos(angHO) + 40
+    y = lenHO*np.sin(angHO)
+    ch_eau = [(-2*de,(0,40)),(de,(y,x)),(de,(-y,x))]
+    g = build_stream(ch_eau)
+    return g[0]

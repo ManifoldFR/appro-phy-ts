@@ -4,6 +4,10 @@
 \usepackage{mathtools, amssymb, amsfonts}
 \usepackage{amsthm}
 \usepackage{fontspec}
+\usepackage[vargreek-shape=unicode]{unicode-math}
+
+\setmainfont{STIX}
+
 \usepackage{titling}
 \usepackage{float}
 \usepackage{listings}
@@ -17,12 +21,13 @@
 \usepackage{comment}
 
 \setdefaultlanguage{french}
-
+\frenchspacing
 
 %% Math commands
-\renewcommand{\vec}[1]{\boldsymbol{\mathbf{#1}}}
-\renewcommand\epsilon\varepsilon
-\renewcommand\phi\varphi
+%\renewcommand{\vec}[1]{\symbbf{#1}}
+\newcommand{\vv}[1]{\symbf{#1}}
+%\renewcommand\epsilon\varepsilon
+%\renewcommand\phi\varphi
 \newcommand{\N}{\mathbb N}
 \newcommand{\Z}{\mathbb Z}
 \newcommand{\R}{\mathbb R}
@@ -122,33 +127,33 @@ Lorsque deux corps chargés électriquement sont mis en présence, comme un bout
 
 Ce comportement est dû au fait que la présence de charges modifie les propriétés de l'espace en créant un \textit{champ électrique}, qui confère à chaque point de l'espace une direction privilégiée dans laquelle orienter les particules chargées et une intensité avec laquelle le faire. Ainsi, une charge qui se retrouve en présence d'une autre est happée par les effets du champ électrique crée par cette dernière.
 
-Le \textit{champ électrique} est un champ vectoriel, c'est-à-dire une fonction d'une variable vectorielle (la position) à valeurs vectorielles (la direction et l'intensité du champ). On le note, classiquement, $\vec{E}$. La situation électrostatique correspond au cas où le champ électrique $\vec{E}$ est indépendant du temps.
+Le \textit{champ électrique} est un champ vectoriel, c'est-à-dire une fonction d'une variable vectorielle (la position) à valeurs vectorielles (la direction et l'intensité du champ). On le note, classiquement, $\vv{E}$. La situation électrostatique correspond au cas où le champ électrique $\vv{E}$ est indépendant du temps.
 
 L'électrostatique << classique >> (par opposition aux contextes de la théorie de la relativité d'\textsc{Einstein} ou la mécanique quantique de \textsc{Planck}, \textsc{Hilbert}, \textsc{Schrödinger}) est régi par les équations de \textsc{Maxwell} (1831-1879). 
 
 
-La force exercée par un champ électrique $\vec{E}$ sur une particule de charge $q$ est donnée par
-	\[ \vec{F}_\mathrm{él} = q\vec{E}. \]
+La force exercée par un champ électrique $\vv{E}$ sur une particule de charge $q$ est donnée par
+	\[ \vv{F}_\mathrm{él} = q\vv{E}. \]
 
 \subsection{Champ électrique créé par une charge ponctuelle}
 
 Pour le cas d'une charge ponctuelle $q$ située en l'origine, les équations de \textsc{Maxwell} conduisent à la solution
-	\[ \vec{E}(\vec{r}) = \frac{1}{4\pi\epsilon_0}\frac{q}{\norm{\vec{r}}^3}\vec{r} \]
-où $\epsilon_0\approx\SI{8.854e-12}{\farad\per\meter}$ est la permittivité électrique du vide (sa tendance à laisser passer les champs électriques). Le champ est donc \textit{radial} et ne dépend que de la distance $r=\norm{\vec{r}}$ : $\vec{E} = E(r)\vec{e}_r$, et pour $r = OM$ on retrouve la formule familière
+	\[ \vv{E}(\vv{r}) = \frac{1}{4\pi\epsilon_0}\frac{q}{\norm{\vv{r}}^3}\vv{r} \]
+où $\epsilon_0\approx\SI{8.854e-12}{\farad\per\meter}$ est la permittivité électrique du vide (sa tendance à laisser passer les champs électriques). Le champ est donc \textit{radial} et ne dépend que de la distance $r=\norm{\vv{r}}$ : $\vv{E} = E(r)\vv{e}_r$, et pour $r = OM$ on retrouve la formule familière
 	\[
     E = \frac{1}{4\pi\epsilon_0}\frac{q}{{OM}^2}.
     \]
 
 \begin{figure}[h]
 	\centering
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.44\textwidth}
 		\begin{tikzpicture}
 		\tikzset{dot/.style={circle,fill,inner sep=2pt}};
 		\tikzset{->-/.style={decoration={
 					markings,
 					mark=at position #1 with {\arrow{>}}},postaction={decorate}}}
 		
-		\clip (-3,-1.5) rectangle (3,1.5);
+		\clip (-3.2,-1.5) rectangle (3.2,1.5);
 		\foreach \a in {0,30,60,90,120,150,180,210,240,270,300,330}
 		\draw [->-=0.45,color=blue!70,thick] (0,0)--(\a:3.2);
 		
@@ -156,14 +161,14 @@ où $\epsilon_0\approx\SI{8.854e-12}{\farad\per\meter}$ est la permittivité él
 		\end{tikzpicture}
 		\caption{Champ créé par une charge positive $q>0$. Les lignes de champ sont orientées vers l'extérieur: le champ est \textit{centrifuge}.}
 	\end{subfigure}\qquad
-	\begin{subfigure}[b]{0.4\textwidth}
+	\begin{subfigure}[b]{0.44\textwidth}
 		\begin{tikzpicture}
 		\tikzset{dot/.style={circle,fill,inner sep=2pt}};
 		\tikzset{->-/.style={decoration={
 					markings,
 					mark=at position #1 with {\arrow{>}}},postaction={decorate}}}
 		
-		\clip (-3,-1.5) rectangle (3,1.5);
+		\clip (-3.2,-1.5) rectangle (3.2,1.5);
 		\foreach \a in {0,30,60,90,120,150,180,210,240,270,300,330}
 		\draw [->-=0.57,color=red!70,thick] (\a:3.2)--(0,0);
 		
@@ -178,19 +183,39 @@ où $\epsilon_0\approx\SI{8.854e-12}{\farad\per\meter}$ est la permittivité él
 	On a $k=\dfrac{1}{4\pi\epsilon_0}=\SI{9.0e9}{\meter\per\farad}.$
 \end{rap}
 
-Ainsi, étant donnée une deuxième particule de charge $q_0$ en un point $\vec{r}$, la force électrostatique exercée sur elle par la charge ponctuelle $q$ placée en l'origine $O$ est
+Ainsi, étant donnée une deuxième particule de charge $q_0$ en un point $\vv{r}$, la force électrostatique exercée sur elle par la charge ponctuelle $q$ placée en l'origine $O$ est
 	\[ 
-	\vec{F} = q_0\vec{E}(\vec{r}) = \frac{1}{4\pi\epsilon_0}\frac{q_0q}{\norm{\vec{r}}^3}\vec{r}.
+	\vv{F} = q_0\vv{E}(\vv{r}) = \frac{1}{4\pi\epsilon_0}\frac{q_0q}{\norm{\vv{r}}^3}\vv{r}.
 	 \]
 
-On retrouve qu'elle est \textit{répulsive} (va dans le sens de $\vec{r}$, donc tend à éloigner les deux charges)  si les deux charges sont identiques (soit $q_0q>0$), et qu'elle est \textit{attractive} (va dans le sens contraire, donc tend à rapprocher les charges) soit si les deux charges sont contraires (soit $q_0q<0$).
+On retrouve qu'elle est \textit{répulsive} (va dans le sens de $\vv{r}$, donc tend à éloigner les deux charges)  si les deux charges sont identiques (soit $q_0q>0$), et qu'elle est \textit{attractive} (va dans le sens contraire, donc tend à rapprocher les charges) soit si les deux charges sont contraires (soit $q_0q<0$).
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=\textwidth]{parts/electrostat/traj_1charge_ellipse.pdf}
+	\end{subfigure}
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=\textwidth]{parts/electrostat/traj_1charge_diverg.pdf}
+	\end{subfigure}
+	
+	\caption{Trajectoires d'une particule dans le champ créé par une charge ponctuelle.}
+\end{figure}
 
 \begin{exo}
-	On considère deux charges identiques $q$ placées de part et d'autre de l'origine aux points de coordonnées $(-a,0)$ et $(a,0)$ ($a>0$) respectivement. On aimerait savoir ce qu'il se passe au niveau du champ électrique créé en même temps par ces deux charges.
+	On considère deux charges identiques $q$ placées de part et d'autre de l'origine aux points de coordonnées $(-a/2,0)$ et $(a/2,0)$ ($a>0$) respectivement. On aimerait savoir ce qu'il se passe au niveau du champ électrique créé en même temps par ces deux charges.
 	
-	À l'aide d'un programme \textsf{Python}, on produit la figure suivante
+	À l'aide d'un programme \textsf{Python}, on produit la figure suivante:
 	
-	\includegraphics[width=\textwidth]{parts/electrostat/Champ_exo1.pdf}
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{parts/electrostat/Champ_exo1.pdf}
+	\end{center}
+	
+	\begin{enumerate}
+		\item Que dire du champ à l'origine du repère $(0,0)$ ? S'agit-il d'une position d'équilibre stable pour une particule chargée plongée dans le champ ?
+		\item Déterminer l'expression du champ électrique dans l'espace privé des points où se situent les charges.
+		\item Déterminer une expression simplifiée du champ électrique sur la médiatrice des points $(-a/2,0)$ et $(a/2,0)$ (la droite d'équation $x=0$).
+	\end{enumerate}
 \end{exo}
 
 \subsection{Dipôle électrique}
@@ -201,54 +226,61 @@ On retrouve qu'elle est \textit{répulsive} (va dans le sens de $\vec{r}$, donc 
 
 Un dipôle électrique est un système globalement neutre où des charges sont réparties de sorte à ce que que les barycentres des charges négatives et des charges positives ne soient pas confondus. On peut alors se ramener à un système de deux charges opposées $-q$ et $+q$ ($q>0$).
 
-On associe à un dipôle une grandeur vectorielle $\vec{p}$, appelée \textit{moment dipolaire}, et qui prend pour expression
+On associe à un dipôle une grandeur vectorielle $\vv{p}$, appelée \textit{moment dipolaire}, et qui prend pour expression
 	\[ 
-	\vec{p} = qd\vec{u}
+	\vv{p} = qa\vv{u},
 	 \]
-avec $d$ la distance entre les deux charges et $\vec{u}$ un vecteur unitaire.
+avec $a$ la distance entre les deux charges et $\vv{u}$ un vecteur unitaire.
 
-\begin{figure}[H]
+\begin{figure}[h]
 	\centering
 	\begin{tikzpicture}
 	\tikzset{dot/.style={circle,fill,inner sep=2pt}};
 	
-	\node[draw,circle,label={above:$+q$}] (P) at (-1.5,0) {$+$};
-	\node[draw,circle,label={above:$-q$}] (N) at (1.5,0) {$-$};
-	\draw[color=gray!80,thick] (P)--(N);
-	\draw[color=black,thick,->] (P)--(-0.1,0) node[midway,below]{$\vec{u}$};
+	\node[draw,circle,label={above:$-q$}] (N) at (-1.5,0) {$-$};
+	\node[draw,circle,label={above:$+q$}] (P) at (1.5,0) {$+$};
+	\draw[color=gray!80,thick] (N)--(P);
+	\draw[color=black,thick,->] (N)--(-0.5,0) node[midway,below]{$\vv{u}$};
 	
 	
-	\draw[->,color=red!90,thick] (-1,0.5) -- (1,0.5) node[midway,sloped,above]{$\vec{p}$};
+	\draw[->,color=red!90,thick] (-1,0.5) -- (1,0.5) node[midway,sloped,above]{$\vv{p}$};
 	\end{tikzpicture}
 	\caption{Dipôle électrique élémentaire constitué de deux charges $+q$ et $-q$.}
 \end{figure}
 
 Bien sûr, comme toute répartition de charges dans l'espace, le dipôle est responsable d'un champ électrostatique, et est lui-même susceptible d'être happé par un champ externe, pouvant induire un déplacement.
 
-\begin{figure}[H]
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=\textwidth]{parts/electrostat/Champ_dipole.pdf}
 	\caption{Champ électrique créé par un dipôle électrique : le pôle nord est positif, le pôle sud est négatif.}
 \end{figure}
 
-On peut montrer que, lorsque soumis à un champ électrostatique $\vec{E}(\vec{r})$, le dipôle électrostatique cherche à minimiser la quantité suivante, appelé \textit{potentiel d'interaction}:
-\[ U = -\vec{p}\cdot\vec{E}(\vec{r}), \]
-où $\vec{r}$ est le barycentre du dipôle.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{parts/electrostat/Champ_dipole_loin.pdf}
+	\caption{Champ loin du dipôle.}
+\end{figure}
+
+On peut montrer que, lorsque soumis à un champ électrostatique $\vv{E}(\vv{r})$, le dipôle électrostatique cherche à minimiser la quantité suivante, appelé \textit{potentiel d'interaction}:
+\[ U = -\vv{p}\cdot\vv{E}(\vv{r}), \]
+où $\vv{r}$ est le barycentre du dipôle. L'expression donnée est une approximation valable lorsque les variations du champ électrique entre les deux extrémités du dipôle sont négligeables.
+
 
 En utilisant l'expression du produit scalaire, on obtient
-	\[ U = - \norm{\vec{p}}\,\norm{\vec{E}(\vec{r})}\cos\theta \]
-où $\theta$ est l'angle que font $\vec{p}$ et $\vec{E}(\vec{r})$.
+	\[ U = - \norm{\vv{p}}\,\norm{\vv{E}(\vv{r})}\cos\theta, \]
+où $\theta$ est l'angle que font $\vv{p}$ et $\vv{E}(\vv{r})$.
 
-Afin de minimiser cette quantité, il faut maximiser $\norm{\vec{E}(\vec{r})}$ et $\cos\theta$. Le dipôle va donc glisser vers là où le champ est plus intense et s'aligner avec lui. 
+Afin de minimiser cette quantité, il faut maximiser $\norm{\vv{E}(\vv{r})}$ et $\cos\theta$. Le dipôle va donc glisser vers là où le champ est plus intense et s'aligner avec lui. 
 
 \begin{rem}
-	Il se peut que $U$ soit maximal. Dans ce cas, le dipôle restera dans un état d'équilibre dit \textit{instable} : si il bouge (en position ou en angle), il se réalignera sur le champ et sera emporté vers les zones où il est intense.
+Il se peut que $U$ soit maximal. Dans ce cas, le dipôle restera dans un état d'équilibre dit \textit{instable} : si il bouge (en position ou en angle), il se réalignera sur le champ et sera emporté vers les zones où il est intense.
 \end{rem}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[height=0.6\textheight]{parts/electrostat/traj_x0(-05,2)_v0(-1,0).pdf}
-	\caption{Trajectoire d'une particule dans le champ créé par un dipôle. Conditions initiales: $\vec{r}_0 = (\num{-0.5};2)$ et $\vec{v}_0=(-1;0)$. Ici, la trajectoire observée est fermée : le mouvement de la particule est \textit{périodique}. Cela n'arrive pas tout le temps.}
+	\includegraphics[height=0.6\textheight]{parts/electrostat/traj_x0_-05_2_v0_-1_0.pdf}
+	\caption{Trajectoire d'une particule dans le champ créé par un dipôle. Position initiale $\vv{r}_0 = (\num{-0.5};2)$ et vitesse initiale $\vv{v}_0=(-1;0)$. Ici, la trajectoire observée est fermée : le mouvement de la particule est \textit{périodique}. Cela n'arrive pas tout le temps.}
 \end{figure}
 
 Une molécule est dite \textit{polaire} lorsque l'électronégativité des éléments la constituant lui donne une structure de dipôle électrique. En effet, le déplacement des électrons intervenant dans des liaisons covalentes faisant apparaître des charges partielles, il se peut que le barycentre de celles qui sont positives et celui de celles qui sont négatives ne soient pas confondus. D'où un dipôle.
