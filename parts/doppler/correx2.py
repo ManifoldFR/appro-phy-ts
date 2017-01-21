@@ -9,6 +9,9 @@ get_ipython().magic('matplotlib inline')
 import numpy as np
 import matplotlib.pyplot as plt
 
+from IPython.display import set_matplotlib_formats
+set_matplotlib_formats('png', 'pdf')
+
 
 # # Échantillonnage du signal et spectre en fréquence
 
@@ -45,7 +48,7 @@ echanti()
 
 # On effectue les tracés de $s(t)$ et de son spectre de Fourier.
 
-# In[7]:
+# In[3]:
 
 fig, ax = plt.subplots(2,1, figsize=(8,8))
 
