@@ -4,21 +4,23 @@
 # In[1]:
 
 get_ipython().magic('matplotlib inline')
-import matplotlib as mpl
-import matplotlib.pyplot as plt
 
 
 # In[2]:
 
-import matplotlib.colors as colors
-import matplotlib.animation as animation
+import matplotlib.pyplot as plt
+from matplotlib import animation, colors, rc
 import matplotlib.ticker as mtick
-from IPython.display import set_matplotlib_formats, HTML
-set_matplotlib_formats('png', 'pdf')
-plt.rcParams['figure.dpi'] = 100
+from IPython.display import set_matplotlib_formats, HTML, Image
 
 
 # In[3]:
+
+set_matplotlib_formats('png', 'pdf')
+rc('animation', html='html5')
+
+
+# In[4]:
 
 import numpy as np
 import scipy.special as spec
@@ -27,7 +29,7 @@ import sympy as sp
 sp.init_printing()
 
 
-# In[4]:
+# In[5]:
 
 # Variables mathématiques
 
@@ -35,8 +37,8 @@ r, omega = sp.symbols('r omega', positive = True) # Distance et fréquence
 t = sp.symbols('t', real=True) # Temps
 Ic = sp.symbols('I', complex=True) # Courant électrique
 
-mu = sp.symbols("mu0", positive = True) # Perméabilité magnétique du vide
-c = sp.symbols("c", positive=True)      # Célérité de la lumière dans le vide
+mu = sp.symbols("mu", positive = True) # Perméabilité magnétique du milieu
+c = sp.symbols("c", positive=True)      # Célérité de la lumière dans le milieu
 k = omega/c                             # relation de dispersion
 
 
@@ -56,7 +58,7 @@ k = omega/c                             # relation de dispersion
 # 
 # (**Attention code long**)
 
-# In[5]:
+# In[19]:
 
 class magField:
     # Composante du potentiel vecteur associée à la pulsation omega
@@ -64,6 +66,17 @@ class magField:
 
     # Composante du champ magnétique associée à la pulsation omega
     B_component = - sp.diff(A_component, r).simplify()
+    
+    def __init__(self, intens=None, puls=None, phas=None):
+        
+        self.cel = 3e8 # Célérité des ondes ; à modifier en fonction du milieu
+        
+        if not(intens is None):
+            if not(phas is None):
+                intens = np.asarray(intens)*np.exp(1j*np.asarray(phas))
+            self.pulsations = puls
+            self.frequences = puls/(2*np.pi)
+            self.bake_spectre(intens)
     
     def bake_spectre(self, intens):
         '''
@@ -79,77 +92,18 @@ class magField:
         B_function = sp.lambdify((r, t), B_expr_re, 
             modules=['numpy',{"besselj":spec.jn, "bessely":spec.yn}])
         
-        self.cplx_expr = B_expr
+        self.c_expr = B_expr
         self.expr = B_expr_re
         self.func = B_function
     
-    def __init__(self, intens=None, puls=None, phas=None):
-        
-        self.cel = 3e8 # Célérité des ondes ; à modifier en fonction du milieu
-        
-        if not(intens is None):
-            if not(phas is None):
-                intens = np.asarray(intens)*np.exp(1j*np.asarray(phas))
-
-            self.pulsations = puls
-            self.frequences = puls/(2*np.pi)
-            self.wavenumbers = self.pulsations/self.cel
-            self.bake_spectre(intens)
-        
-    def draw(self, times, ani = False, custTitl = None):
-        '''
-        Construit les graphes du champ magnétique B aux temps donnés dans la liste
-        "times"
-        Si le drapeau 'ani' est True, alors entrer en mode "animation"
-        '''
-        func = self.func
-        
-        radii = np.linspace(rmin, rmax, 1000)
-
-        fig = plt.figure(1, figsize=(8,5))
-        ax = plt.axes()
-        ax.set_xlim((rmin,rmax))
-        ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%.2e'))
-
-        # Donne la légende 'temps'
-        def legende(ti):
-            return r'$t= {:.3e}$'.format(ti) + r"$\ \mathrm{s}$" 
-
-        if not(ani):
-            if hasattr(times, '__iter__'):
-                for ti in times:
-                    champ = func(radii, ti)
-                    ax.plot(radii, champ, label=legende(ti))
-            else:
-                champ = func(radii, times)
-                ax.plot(radii, champ, label=legende(times))
-            ax.legend(loc='best')
-        else:
-            line, = ax.plot([], [], lw=2)
-            time_text = ax.text(0.02, 0.95, '', transform=ax.transAxes)
-
-            interval = times[1] - times[0]
-            animtime = 15
-            fps = 30
-            dt = interval/animtime # secondes vidéo par seconde réelle
-            framenum = int(np.ceil(fps*animtime))
-
-            ymax = func(radii,t0).max()
-            ax.set_ylim((-1.3*ymax,1.3*ymax))
-
-            def init():
-                line.set_data([],[])
-                time_text.set_text('')
-                return line, time_text
-
-            def animate(i):
-                ti = dt*i/fps+t0
-                legende_temps = legende(ti)
-                champ = func(radii, ti)
-                line.set_data(radii, champ)
-                time_text.set_text(legende_temps)
-                return line, time_text
-
+    def legende(self,ti):
+        """Définit la légende"""
+        return r'$t= {:.3e}$'.format(ti) + r"$\ \mathrm{s}$"
+    
+    def labelplot(self, fig, ax, custTitl=None):
+        """
+        Nomme les axes et le graphe pour le profil du champ.
+        """
         ax.grid(True)
         ax.set_xlabel("Distance $r$ (m)")
         ax.set_ylabel("Valeur du champ (T)")
@@ -157,23 +111,80 @@ class magField:
             ax.set_title(custTitl)
         else:
             ax.set_title(r'Champ magnétique ' + r'$\mathbf{B}$'                          + ' créé par un courant variable')
-
+        
         fig.tight_layout()
+    
+    def initialise_plot(self):
+        fig = plt.figure(1, figsize=(8,5))
+        ax = plt.axes()
+        ax.set_xlim((rmin,rmax))
+        ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%.2e'))
+        return fig, ax
+    
+    def profile(self, times, ani = False, custTitl = None):
+        '''
+        Construit les graphes du champ magnétique B aux temps donnés 
+        dans la liste "times"
+        '''
+        func = self.func
+        radii = np.linspace(rmin, rmax, 1000)
+        fig,ax = self.initialise_plot() 
 
-        if ani:
-            anima = animation.FuncAnimation(fig, animate, init_func=init,
-                        frames = framenum, interval = interval, blit = True)
-            slef.writer = animation.FFMpegWriter(fps=fps, bitrate=1000)
-            self.animation = anima
+        if hasattr(times, '__iter__'):
+            for ti in times:
+                champ = func(radii, ti)
+                ax.plot(radii, champ, label=self.legende(ti))
         else:
-            self.graphe = fig
-            
+            champ = func(radii, times)
+            ax.plot(radii, champ, label=self.legende(times))
+        ax.legend(loc='best')
+        
+        self.labelplot(fig, ax, custTitl)
+        self.graphe = fig
+        
+    def make_anim(self, t0, t1, animtime=10, custTitl = None):
+        """
+        Construit une animation du profil du champ entres les temps spécifiés.
+        """
+        
+        func = self.func
+        radii = np.linspace(rmin, rmax, 1000)
+        fig, ax = self.initialise_plot()
+    
+        line, = ax.plot([], [], lw=2)
+        time_text = ax.text(0.02, 0.95, '',
+                            transform=ax.transAxes)
+
+        time_window = t1 - t0
+        fps = 30
+        frames = int(np.ceil(fps*animtime))
+        dt = 1000/fps # Intervalle entre deux images
+
+        ymax = func(radii,t0).max()
+        ax.set_ylim((-1.3*ymax,1.3*ymax))
+        
+        def init():
+            line.set_data([],[])
+            time_text.set_text(r'$t={:.2e}$'.format(t0))
+            return line,
+        
+        def animate(i):
+            ti = time_window*i/frames+t0
+            champ = func(radii, ti)
+            line.set_data(radii, champ)
+            time_text.set_text(self.legende(ti))
+            return line,
+    
+        self.labelplot(fig,ax,custTitl)
+        anim = animation.FuncAnimation(fig, animate, init_func=init, 
+                               frames=frames, interval=dt, blit=True)
+        self.anim = anim
+        
     def make_portrait(self, t, colmap='bone'):
         """
         Portrait du champ magnétique à l'instant t
         """
         wind = rmax
-
         func = self.func
 
         def field_func(x,y):
@@ -214,7 +225,7 @@ class magField:
 
 # On pourrait éventuellement implémenter une classe `elecField` représentant le courant électrique... Le lecteur intrépride pourra s'y aventurer en répliquant le schéma adopté plus haut, ou en faisant une sous-classe de `magField`.
 
-# In[6]:
+# In[7]:
 
 # Composante du champ électrique associée à la pulsation omega
 A_component = magField().A_component
@@ -226,7 +237,7 @@ E_component
 
 # La cellule suivante définit les courants électriques comme une classe Python `magField`, dont les attributs sont notamment l'expression formelle du champ (`expr`), et la fonction numérique qui permet de calculer le courant à un instant (`func`).
 
-# In[7]:
+# In[8]:
 
 class Current:
     # Composante du courant électrique de pulsation omega
@@ -327,9 +338,9 @@ class Current:
 
 # ## Données initiales
 
-# Entrez dans la variable `freqs` les fréquences du courant voulu, et dans `phas` les phases associées, et exécutez la cellule (`Ctrl + Entrée` sur le clavier) pour définir la fonction de champ :
+# Entrez dans la variable `freqs` les fréquences du courant voulu, et dans `phas` les phases. Exécutez la cellule (`Ctrl + Entrée` sur le clavier) pour définir la fonction de champ :
 
-# In[8]:
+# In[9]:
 
 freqs = np.array([n*1e8 for n in range(5,7)] +     [n*1e5 for n in range(2,5)])
 
@@ -341,7 +352,7 @@ phases = np.array([0,0,0,0,0]) # Phases des composantes
 B_field = magField(intens, puls, phases)
 
 
-# In[9]:
+# In[10]:
 
 courant = Current(intens, puls, phases)
 courant.draw(0,1e-8)
@@ -349,17 +360,17 @@ courant.draw(0,1e-8)
 
 # La cellule suivante définit les distances minimale et maximale pour lesquels tracer le profil du champ magnétique :
 
-# In[10]:
+# In[11]:
 
 rmin = 0.03
 rmax = 2
 
 times = [1e-9*k for k in [0, 3, 6, 9]]
 
-B_field.draw(times)
+B_field.profile(times)
 
 
-# In[11]:
+# In[12]:
 
 t_p = times[2]    # Temps auquel calculer le portrait du champ (pas de liste)
 
@@ -372,7 +383,7 @@ B_field.portrait.savefig('portrait_champmag.png')
 
 # Modifiez cette cellule avec les fréquences que vous voulez utiliser pour l'animation:
 
-# In[12]:
+# In[13]:
 
 freqs = np.array([n*1e8 for n in [2,6,8,14,15]] +     [n*1e6 for n in range(2,5)]        )
 
@@ -381,34 +392,41 @@ puls = 2*np.pi*np.array(freqs) # Pulsations associées
 intens = [1,1,1,1,1,7,10,10] # Intensités des composantes
 phases = [-0.3,0,-0.4,0,0,-0.1,0.2,0.3] # Phases des composantes
 
-B_field = magField(intens, puls, phases)
 
-
-# In[13]:
+# In[14]:
 
 courant = Current(intens,puls,phases)
 courant.draw(0,1e-8)
 
 
-# In[14]:
+# In[15]:
+
+B_field = magField(intens, puls, phases)
+
+
+# In[16]:
 
 rmin = 0.05
 rmax = 1
 
-B_field.draw([1e-8*2*n for n in range(0,5)])
+B_field.profile([1e-8*2*n for n in range(0,5)])
 
 
-# In[ ]:
+# In[17]:
 
-times_an = [0, 1e-5]
+times_an = (0, 1e-5)
 
-B_field.draw(times_an, True)
-B_field.animation.save("champmag_anim.mp4", writer=B_field.writer)
+B_field.make_anim(*times_an)
+
+
+# In[18]:
+
+B_field.anim
 
 
 # # Paquet d'ondes
 
-# In[15]:
+# In[20]:
 
 def gaussienne(tau):
     tard = t - 0
@@ -418,11 +436,11 @@ def gaussienne(tau):
     return out
 
 
-# In[16]:
+# In[32]:
 
 tau = 5e-14
-N = 2**10 # Nombre d'échantillons
-fs = 2**49 # Fréquence d'échantillonnage
+N = 2**9 # Nombre d'échantillons
+fs = 2**48 # Fréquence d'échantillonnage
 
 courant = gaussienne(tau)
 courant.expr
@@ -430,7 +448,7 @@ courant.expr
 
 # Courbe représentative du courant $i(t) = e^{-t^2/(2\tau^2)}\cos\left(\frac{t}{\tau}\right)$:
 
-# In[17]:
+# In[33]:
 
 titros = r"Paquet gaussien d'extension $\tau = {:.2e}$ s".format(tau)
 courant.draw(-N/fs,N/fs, N+1, custTitle = titros)
@@ -438,42 +456,46 @@ courant.draw(-N/fs,N/fs, N+1, custTitle = titros)
 
 # Construction du spectre du courant via la méthode `bake_fft`:
 
-# In[18]:
+# In[34]:
 
 courant.bake_fft(fs, N)
 courant.draw_fft()
 
 
-# In[19]:
+# In[35]:
 
 intens = courant.intensities
 puls = courant.pulsations
 
 
-# In[20]:
+# In[36]:
 
 B_field = magField(intens, puls)
 
 
-# In[21]:
+# In[42]:
 
 rmin = 0.178
-rmax = 0.182
+rmax = 0.18
 
-times = [1e-12*k for k in [1,6]]
+times = [1e-11*k for k in [1,2]]
 titre_gauss = "Réponse à un paquet gaussien d'extension " +         r"$\tau={:.2e}$".format(tau) + " $\mathrm{s}$"
-B_field.draw(times, custTitl=titre_gauss)
+B_field.profile(times, custTitl=titre_gauss)
 
 
-# In[ ]:
+# In[43]:
 
-times = [0,1e-10]
+times = (0,2e-11)
 
-B_field.draw(times, True, 
+B_field.make_anim(*times, 
     custTitl = "Propagation d'un paquet gaussien d'extension " + \
             r"$\tau = {:.2e}$".format(tau) + \
             "$\mathrm{s}$")
-B_field.animation.save("paquet_gaussien.mp4", writer=B_field.writer)
+
+
+# In[44]:
+
+B_field.anim
 
 
 # # Théorie
