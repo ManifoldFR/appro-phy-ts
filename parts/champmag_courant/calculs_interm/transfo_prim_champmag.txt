@@ -1,7 +1,0 @@
-F(k,\omega) = \frac{I(\omega)}{2\pi}\left [ \sqrt{k^2-{k(\omega)}^2}\ln\left(k+\sqrt{k^2-{k(\omega)}^2}\right) - k \right ] + D(\omega)\sqrt{k^2-{k(\omega)}^2},\\
-\quad k(\omega) = \frac{\omega}{c} \\
-
-\begin{align*} 
-H_\theta(k,\omega) &= \partial_kF(k,\omega) = \frac{k}{k^2-k(\omega)^2}F(k,\omega) + \frac{k^2}{k^2-k(\omega)^2}\frac{I(\omega)}{2\pi} \\
-&= \frac{I(\omega)}{2\pi}\frac{k\ln\left(k+\sqrt{k^2-{k(\omega)}^2} \right )}{\sqrt{k^2-{k(\omega)}^2}} + \frac{D(\omega)}{\sqrt{k^2-{k(\omega)}^2}}.
-\end{align*}

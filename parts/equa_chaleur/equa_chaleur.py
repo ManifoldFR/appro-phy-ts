@@ -3,7 +3,7 @@
 
 # In[1]:
 
-get_ipython().magic('matplotlib notebook')
+get_ipython().magic('matplotlib inline')
 
 
 # Ce notebook Jupyter s'intéresse à la résolution numérique de l'équation de la chaleur. Il utilise des cellules de codes interactives que vous pouvez modifier ou utiliser pour générer des données, dessins, animations comme expliqué dans la suite.
@@ -18,7 +18,8 @@ import sympy as sp
 sp.init_printing()
 
 from matplotlib import animation, rc
-from IPython.display import HTML, Image, clear_output
+from IPython.display import HTML, Image, set_matplotlib_formats
+set_matplotlib_formats('png','pdf')
 
 rc('animation', html='html5')
 
@@ -64,7 +65,7 @@ rc('animation', html='html5')
 # 
 # Elle ne sera pas utilisée directement ; on va lui subordonner une autre classe `Simulation` (voir plus bas) qui elle servira à effectuer nos simulations.
 
-# In[21]:
+# In[3]:
 
 class Domain():
     """
@@ -177,7 +178,7 @@ def process_matrix(Omega, diffus):
 
 # Nous allons implémenter l'algorithme de Crank-Nicolson via, encore une fois, de la programmation orientée objet, en définissant une classe `Simulation`, dérivée de la classe `Domain`, qui aura pour attributs les autres paramètres de simulation telles que les conditions initiales, et qui disposera de méthodes pour appliquer l'algorithme pour générer une liste de points de la solution approchée, faire les graphes, des animations.
 
-# In[36]:
+# In[5]:
 
 class Simulation(Domain):
     
@@ -197,7 +198,7 @@ class Simulation(Domain):
         self.U0 = U0
     
     def setup_plot(self):
-        fig, ax = plt.subplots(1,1,figsize=(6,4))
+        fig, ax = plt.subplots(1,1)
         ax.grid(True)
         ax.set_xlabel(r"Position $x$ ($m$)")
         ax.set_ylabel(r"Température $u(x,t)$ ($°C$)")
@@ -220,7 +221,7 @@ class Simulation(Domain):
         fig, ax = self.setup_plot()
         
         line, = ax.plot([], [], lw = 2)
-        time_text = ax.text(0.4,1.04, '',transform=ax.transAxes)
+        time_text = ax.text(0.4,.91, '',transform=ax.transAxes)
         
         time_window = T
         fps = 30
@@ -294,50 +295,46 @@ def distrib(x, x0, sigma):
 # u(x,0) = 25 + 10\exp\left(-\frac{(x-L/2)^2}{\sigma^2}\right)
 # $$
 
-# In[37]:
+# In[8]:
 
 L = 0.25
-T = 360
-
+T = 270
 sigma = 0.3
 x0 = L/2
 sim = Simulation(L, T, diffus)
 U0 = 25+ 10*distrib(sim.Xs, x0, sigma)
 
-
-# In[38]:
-
 sim.simulate(U0)
 
 
-# In[39]:
+# In[9]:
 
 sim.animate()
 
 
-# In[40]:
+# In[10]:
 
 sim.anim
 
 
 # Une autre simulation, avec $x_0=0$:
 
-# In[41]:
+# In[11]:
 
 sigma = 0.1
 x0 = 0.
 
-sim = Simulation(L,T,diffus)
+sim = Simulation(L,180,diffus)
 U0 = 10*distrib(sim.Xs, x0, sigma) + 25
 sim.simulate(U0)
 
 
-# In[42]:
+# In[12]:
 
 sim.animate()
 
 
-# In[43]:
+# In[13]:
 
 sim.anim
 
@@ -347,11 +344,12 @@ sim.anim
 # u(x,0) = 25 + 30\left(\exp\left(-\frac{x^2}{\sigma^2}\right)+\exp\left(-\frac{(x-L)^2}{\sigma^2}\right)\right)
 # $$
 
-# In[44]:
+# In[14]:
 
 sigma = 0.1
 x0 = 0.
-x1 = L
+x1 = L = 0.25
+T = 270
 
 sim = Simulation(L,T,diffus)
 U0 = 25+30*(distrib(sim.Xs, x0, sigma) + distrib(sim.Xs, x1, sigma))
@@ -359,12 +357,12 @@ U0 = 25+30*(distrib(sim.Xs, x0, sigma) + distrib(sim.Xs, x1, sigma))
 sim.simulate(U0)
 
 
-# In[45]:
+# In[15]:
 
 sim.animate()
 
 
-# In[46]:
+# In[16]:
 
 sim.anim
 
@@ -375,7 +373,7 @@ sim.anim
 # $$
 # avec $0< m< 1$.
 
-# In[47]:
+# In[17]:
 
 L = 0.5
 T = 270
@@ -391,12 +389,12 @@ U0 = 20 + 50*distrib(sim.Xs,x0,sigma0) - 30*distrib(sim.Xs,x1,sigma1)
 sim.simulate(U0)
 
 
-# In[48]:
+# In[18]:
 
 sim.animate()
 
 
-# In[49]:
+# In[19]:
 
 sim.anim
 
