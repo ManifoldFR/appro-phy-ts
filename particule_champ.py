@@ -8,9 +8,11 @@ sp.init_printing()
 
 from matplotlib import animation, rc
 
+## Domaine
+
 class Domain:
     
-    def __init__(self, xm, ym, I, J, origin=True):
+    def __init__(self, xm, ym, I, J, origin=True, eps=0):
         begx = -origin*xm
         begy = -origin*ym
         
@@ -22,14 +24,18 @@ class Domain:
         self.ys = np.linspace(begy,ym,J)
         self.J = J
         
-        rad = self.xs**2 + self.ys**2
-        cond = rad > 0
+        self.rad = (self.xs**2 + self.ys**2)**0.5
+        cond = self.rad > eps
         
         self.grid = np.meshgrid(self.xs[cond],
                 self.ys[cond])
+        
+        
     
     def __call__(self):
         return self.grid
+
+## Champ électromagnétique
 
 class Field:
     
@@ -80,7 +86,8 @@ class Field:
     def _setup_surface(self):
         grid = self.domain()
         
-        fig = plt.figure(1)
+        fig = plt.figure(2)
+        fig.suptitle(r"Composante verticale du champ électrique")
         ax = fig.add_subplot(111, projection='3d')
         ax.grid(True)
         
@@ -102,7 +109,7 @@ class Field:
         tm -> intervalle [0,tm]
         fps : nombre d'images par seconde à générer
         """
-        animtime = 3 # durée de l'animation
+        animtime = 6 # durée de l'animation
         interval = 1000/fps # temps entre deux frames
         N = int(np.ceil(animtime*fps))
         dt = tm/N # saut temporel entre chaque frame
@@ -113,10 +120,12 @@ class Field:
             return Ez
         
         Ez = fieldo(0)
-        zlims = (np.nanmin(Ez),np.nanmax(Ez))
+        zlims = (np.nanmin(Ez),1.5*np.nanmax(Ez))
         
-        surf = ax.plot_wireframe(*grid, fieldo(0))
-        time_text = ax.text(0.4,0.9,0.6,r'$t=0$')
+        surf = ax.plot_wireframe(*grid, fieldo(0),)
+        time_text = ax.text2D(0.5,1,r'$t=0$',
+                    horizontalalignment='center',
+                    transform=ax.transAxes)
         ax.set_zlim(zlims)
         
         def update(i):
@@ -124,8 +133,10 @@ class Field:
             ax.set_zlim(zlims)
             ti = i*dt/N
             Ez = fieldo(ti)
-            s = r'$t={:g}$'.format(ti)
-            time_text = ax.text(0.5,0.9,0,s)
+            s = r'$t={:.3e}$'.format(ti)
+            time_text = ax.text2D(0.5,1,s,
+                    horizontalalignment='center',
+                    transform=ax.transAxes)
             data = ax.plot_wireframe(*grid, Ez)
             return data, time_text
         
@@ -137,11 +148,4 @@ class Field:
         fig.show()
 
 
-## Un test
 
-Omega = Domain(16,16,80,80, True)
-champ = Field(3e8)
-
-champ.create_domain(Omega)
-
-champ.surface(0)

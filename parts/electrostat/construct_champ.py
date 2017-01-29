@@ -3,9 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 
-wx,wy = 800,600
+wx,wy = 600,600
 
-Y,X = np.ogrid[-wx:wx:64j, -wy:wy:64j]
+Y,X = np.ogrid[-wy:wy:64j, -wx:wx:64j]
 
 def field(q,r0,x,y):
     """Champ électrique créé par une charge q à la position r0"""
@@ -29,17 +29,17 @@ def build_stream(charges, customTitle=None):
         Ey += cmy
     color = np.log(np.sqrt(Ex**2 + Ey**2))
     
-    fig = plt.figure(1)
+    fig = plt.figure(1, figsize=(8,8))
     ax = fig.add_subplot(111)
     
-    ax.streamplot(X,Y,Ex,Ey, arrowstyle='->', arrowsize=0.6, color=color, cmap=plt.cm.inferno,density=3)
+    ax.streamplot(X,Y,Ex,Ey, arrowstyle='->', arrowsize=0.6, color=color, cmap=plt.cm.inferno,density=2.2)
     
     # Taille des charges ponctuelles
     radius = (wx*wx+wy*wy)**0.5
     
     charge_colors = {True: '#cc0000', False: '#0000aa'}
     for q, pos in charges:
-        ax.add_artist(Circle(pos, 0.01*radius, color=charge_colors[q>0]))
+        ax.add_artist(Circle(pos, 0.01*radius, color=charge_colors[q>0],zorder=2))
     
     if customTitle:
         ax.set_title(customTitle)
@@ -103,5 +103,8 @@ def dipole_eau():
     x = -lenHO*np.cos(angHO) + 40
     y = lenHO*np.sin(angHO)
     ch_eau = [(-2*de,(0,40)),(de,(y,x)),(de,(-y,x))]
-    g = build_stream(ch_eau)
+    g = build_stream(ch_eau, r"Champ électrique créé par la molécule d'eau")
+    g[1].set_xlabel(r'$x$ ($\mathrm{pm}$)')
+    g[1].set_ylabel(r'$y$ ($\mathrm{pm}$)')
+    g[0].tight_layout()
     return g[0]
