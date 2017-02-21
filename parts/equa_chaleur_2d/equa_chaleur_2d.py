@@ -1,4 +1,12 @@
-# In[83]:
+
+# coding: utf-8
+
+# In[1]:
+
+get_ipython().magic('matplotlib inline')
+
+
+# In[2]:
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,6 +17,13 @@ from matplotlib import animation, rc
 import matplotlib.ticker as mticker
 from mpl_toolkits.mplot3d import Axes3D
 
+
+# In[3]:
+
+from IPython.display import HTML, Image, set_matplotlib_formats
+set_matplotlib_formats('png','pdf')
+
+rc('animation', html='html5')
 
 
 # Étant donnée la nature numériquement intensive des calculs tensoriels en jeu, on aura besoin de la librairie `numba` qui passe par le langage `C` pour compiler des fonctions plus rapides *on the fly*:
@@ -88,7 +103,7 @@ from numba import double, int32, float32
 # 
 # La classe suivante permet de représenter le domaine spatial et temporel discrétisé, avec les attributs relatifs aux paramètres de grille (nombre de points, pas, bornes...).
 
-# In[5]:
+# In[19]:
 
 class Domain():
     """
@@ -108,6 +123,9 @@ class Domain():
         self.N = N # Taille des échantillons temporels
         self.times = np.linspace(0,T,N)
         self.dt = T/N
+    
+    def __call__(self):
+        return self.grid
 
 
 # ## Tenseur $\mathbf T$
@@ -155,31 +173,35 @@ def to_matrix(tens):
 # 
 # Simple fonction qui dessine le profil d'une fonction sur $\Omega$.
 
-# In[9]:
+# In[8]:
 
-def graphe(Omega, U):
-    """
-    Omega, U
-    Profil de U sur \Omega
-    """
+def graphe(Omega, U0):
     fig = plt.figure()
     ax = Axes3D(fig)
     ax.grid(True)
     ax.plot_wireframe(*Omega.grid, U0)
 
 
+# Un petit test:
 
+# In[9]:
+
+Omega = Domain(1,2,64,128)
+
+U0 = 25+3*(lambda x,y: 10-(5*x**2+4*y**2))(*Omega.grid)
+
+graphe(Omega, U0)
 
 
 # ## Conditions de Dirichlet
 # 
 # Une fonction qui prend une matrice d'état et impose ses valeurs au bord.
 
-# In[11]:
+# In[10]:
 
 def enforceDirich(Omega, state, f, n):
     """
-    Impose les conditions aux limites de Dirichlet à l'instant t
+    Impose les conditions aux limites de Dirichlet à l'instant t_n
     """
     J = Omega.J
     Xs = Omega.Xs
@@ -197,7 +219,7 @@ def enforceDirich(Omega, state, f, n):
 # 
 # Il s'agit d'un simple passage dans une boucle en itérant sur les temps discrets, donnés par l'attribut `times` du domaine passé en argument. Pour ça, on va utiliser une classe `Solver` dont la méthode `solve` effectue la résolution.
 
-# In[59]:
+# In[11]:
 
 class Solver:
     
@@ -248,7 +270,7 @@ class Solver:
 
 # On implémente les animations via une classe nommée `HeatAnimation`. Le constructeur associé prend en argument le domaine, la distribution initiale de température, et la fonction décrivant la condition aux limites.
 
-# In[85]:
+# In[46]:
 
 class HeatAnimation(Solver):
     
@@ -283,7 +305,7 @@ class HeatAnimation(Solver):
             ax.set_zlim(zlims)
             data = ax.plot_wireframe(*grd, self.states[i])
             self._formatAxes(ax)
-            time_text = ax.text2D(0.02,0.95, self._timeText(ti),
+            time_text = ax.text2D(0.02,0.97, self._timeText(ti),
                 transform=ax.transAxes)
             return data, time_text
 
@@ -306,7 +328,7 @@ class HeatAnimation(Solver):
         except AttributeError:
             self.solve()
         data = ax.imshow(self.states[0],
-                interpolation='sinc', 
+                interpolation='lanczos', 
                 extent=[x0,x1,y0,y1],       
                 cmap=cmap)
         self._formatAxes(ax)
@@ -339,12 +361,80 @@ class HeatAnimation(Solver):
 # $$
 # avec $\beta$ un paramètre et $(v,w)$ la position de la cloche.
 
-# In[86]:
+# In[39]:
 
 def distrib(x,y, beta = 2, pos=(0,0)):
     v,w = pos
     return np.exp(-beta*((x-v)**2+(y-w)**2))
 
 
+# # Tests
+# 
+# **Attention** Assurez-vous que la fonction de la condition aux limites $f:\partial\Omega\times I\longrightarrow\mathbb R$ est définie au moins au bord de votre domaine...
 
+# In[40]:
+
+def f(x, y, t):
+    if x==1 or x==-1:
+        return 35+10*y
+    elif y==-1:
+        return 40
+    else:
+        return 26
+
+
+# In[41]:
+
+Omega = Domain(1,1800, J=32, N=300)
+
+U0 = np.zeros((32,32))
+
+enforceDirich(Omega, U0, f, 1)
+graphe(Omega, U0)
+
+
+# In[42]:
+
+anim = HeatAnimation(Omega, U0, f)
+
+
+# In[43]:
+
+anim.evolHeat()
+
+
+# In[18]:
+
+anim.evolSurface()
+
+
+# # Test 2: distribution en cloche
+
+# Avec condition initiale $$u_0(x,y) = T\exp\left(-\frac{x^2+y^2}{2\gamma^2}\right), $$ où $\gamma > 0$ est le rayon à mi-hauteur de la cloche.
+
+# In[47]:
+
+Omega = Domain(1,1800, J=32, N=300)
+gamma = 0.3
+U0 = 40*distrib(*Omega(), beta = 1/(2*gamma**2))
+
+condBord = (lambda x, y,t : 0)
+enforceDirich(Omega, U0, condBord, 1)
+
+graphe(Omega,U0)
+
+
+# In[48]:
+
+animG = HeatAnimation(Omega, U0, condBord)
+
+
+# In[49]:
+
+animG.evolHeat()
+
+
+# In[37]:
+
+anim.evolSurface()
 
