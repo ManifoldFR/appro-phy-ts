@@ -1,6 +1,6 @@
 \documentclass{article}
 \usepackage{polyglossia}
-\usepackage[a4paper]{geometry}
+\usepackage[a4paper,hmargin=4cm]{geometry}
 \usepackage{mathtools, amssymb, amsfonts}
 \usepackage{amsthm}
 \usepackage{fontspec}
@@ -8,11 +8,13 @@
 \usepackage{float}
 \usepackage{listings}
 \usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{mdframed}
 \usepackage[hidelinks]{hyperref}
 \usepackage{caption,subcaption}
 \usepackage{tikz}
 \usepackage[locale = FR, exponent-product = \cdot, inter-unit-product = .]{siunitx}
-\usetikzlibrary{shapes,calc,angles,decorations.markings}
+\usetikzlibrary{arrows,shapes,calc,angles,decorations.markings,patterns,decorations.pathmorphing}
 \usepackage[shortlabels]{enumitem}
 \usepackage{comment}
 
@@ -34,15 +36,31 @@
 
 %% Math environments
 \theoremstyle{definition}
-\newtheorem{exo}{Exercice}
 
-\theoremstyle{remark}
-\newtheorem*{rap}{Rappel}
+\newmdtheoremenv[%
+	backgroundcolor=lightgray!50,
+	linecolor=red!60!black,
+	linewidth=2pt,
+	topline=false,
+	rightline=false,
+	bottomline=false]{exo}{Exercice}
+
+\newmdtheoremenv[%
+	backgroundcolor=lightgray!20,
+	linecolor=blue!60!black,
+	linewidth=2pt,
+	topline=false,
+	rightline=false,
+	bottomline=false]{rap}{Rappel}
+
+
+%% Derivatives
+\newcommand{\od}[3][]{\frac{\mathrm d^{#1}#2}{\mathrm d#3^{#1}}}
 
 %% Titling configuration
 \pretitle{\begin{center}\LARGE\textsf }
 	\title{Oscillateurs}
-	\posttitle{\par\end{center}\vspace{-1.2em}}
+\posttitle{\par\end{center}\vspace{-1.2em}}
 
 \preauthor{}
 \author{}
@@ -50,6 +68,8 @@
 
 \date{\today}
 
+
+\setlength\parskip{1em}
 
 \begin{document}
 \maketitle
@@ -79,11 +99,30 @@ On considère maintenant qu'un objet de masse $m$, que l'on assimilera à un poi
 
 La masse $m$ est soumise à son poids, et l'exerce sur le support ; en vertu de la troisième loi de Newton, le support exerce sur la masse une réaction égale à l'opposée du poids qui le compense. Ne reste que la force de rappel.
 
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\tikzset{dot/.style={circle,fill,inner sep=1.8pt}};
+\node[dot,label={above right:$O$}](Origine) at (0,0) {};
+\node[dot,inner sep=2.6pt,label={above:$m$}](Masse) at (6,0) {};
+
+\fill [pattern = north east lines] (0,-1) rectangle (-0.6,0.8);
+\draw [thick] (0,-0.5) -- (0,0.8);
+
+\draw[decoration={aspect=0.3, segment length=3mm, amplitude=5mm,coil},decorate] (Origine) -- (Masse);
+\fill [pattern = north east lines] (0,-0.5) rectangle (6.2,-1);
+\draw [thick] (0,-0.5) -- (6.2,-0.5);
+
+\draw[->,violet,line width=1.4pt] (Origine) -- (1,0) node[midway,label={[label distance=0.2]70:$\vec{e}_x$}] {};
+\end{tikzpicture}
+\caption{Système masse-ressort}
+\end{figure}
+
 Le système est donc à l'équilibre lorsque $\vec{F}=\vec{0}$, i.e. $\ell=\ell_0$. On ramène l'espace au repère $(O,\vec{e}_x)$ où $O$ est la position d'équilibre de la masse. La position de la masse est donc $\vec{r}=x\vec{e}_x$ où $x=\ell-\ell_0$.
 
 D'après le principe fondamental de la dynamique, la position $\vec{r}$ de la masse vérifie l'équation différentielle
     \[
-    m\ddot{\vec{r}} = \vec{F} = -k(\ell-\ell_0)\vec{e}_x.
+    m\od[2]{\vec{r}}{t} = \vec{F} = -k(\ell-\ell_0)\vec{e}_x.
     \]
 
 Projeter selon $\vec{e}_x$ fournit successivement :
@@ -106,13 +145,6 @@ Il existe deux réels $A$ et $B$ tels que
 
 On note $x_0=x(0)$ et $v_0=\dot{x}(0)$ la position et la vitesse initiale de la masse. En utilisant l'expression, en déduire les expressions de $A$ et de $B$.
 
-
-\begin{exo}
-Montrer qu'il existe deux réels $X_m$ et $\phi$ tels que 
-\[x(t)=X_m\cos(\omega_0t+\phi),\]
-les exprimer en fonction de $x_0$, $v_0$ et $\omega_0$.
-\end{exo}
-
 \subsection{Aspects énergétiques}
 
 Le ressort emmagasine une énergie potentielle \textit{élastique}
@@ -121,23 +153,196 @@ E_{pe} = \frac{1}{2}k{(\ell-\ell_0)}^2.
 \]
 Et une énergie cinétique
 \[
-E_k = \frac{1}{2}mv^2.
+E_k = \frac{1}{2}m\dot{x}^2.
 \]
 
-
+L'\textit{énergie mécanique} $E_m$ est la somme des contributions cinétique et potentielle:
+\begin{equation}
+	E_m = E_k + E_{pe} = \frac{1}{2}m\dot{x}^2 + \frac{1}{2}kx^2
+\end{equation}
+et est constante en l'absence de forces dissipatives (par exemple, des frottements).
 
 \subsection{Exercices}
 
 \begin{exo}
+	Montrer qu'il existe deux réels $X_m$ et $\phi$ tels que 
+	\[x(t)=X_m\cos(\omega_0t+\phi),\]
+	les exprimer en fonction de $x_0$, $v_0$ et $\omega_0$.
+\end{exo}
+
+\begin{exo}
 	On considère une masse $m$ accrochée au bout d'un ressort pendant à la verticale, dont l'autre extrémité est retenue par un plan horizontal. On note $z$ l'altitude de la masse $m$, avec $z=0$ au niveau du plan. Déterminer la position d'équilibre, l'équation du mouvement et la résoudre.
+\end{exo}
+
+\begin{exo}
+	On considère un pendule rigide, dont la tige est de longueur $\ell$ et de masse négligeable devant une masse $m$ accrochée à son bout. On note $\theta$ l'angle entre la tige et la verticale, orienté comme sur le schéma suivant:
+	\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+	\tikzset{dot/.style={fill,circle,inner sep=2.6pt}};
+	\node[dot,inner sep=1.2pt,label={below left:$O$}](O) at (0,0){};
+	\fill[pattern= north east lines,line width=1.2pt] (-3,.6) rectangle (3,0);
+	\draw[line width=2pt] (-3,0)--(3,0);
+	
+	\node[dot,label={right:$m$}](Masse) at (1.2,-4) {};
+	\draw[line width=2pt] (O) -- (Masse) node[midway,label={20:$\ell$}]{};
+	\draw[line width=1.2pt,dashed] (O) -- (0,-4.2);
+	
+	\path
+		(0,-3.4) edge[->,>=stealth',bend right=21] node [right] {} (0.86,-2.8);
+	\node[label={below:$\theta$}] at (0.3,-3.2) {};
+ 	\end{tikzpicture}
+ 	\caption{Pendule simple}
+	\end{figure}
+	
+	On lève le pendule jusqu'à un angle $\theta_0$ petit, et on le lâche avec une vitesse initiale nulle.
+	
+	\begin{enumerate}
+	\item Montrer que l'énergie cinétique du pendule est
+	\[
+	E_k = \frac 1 2 ml^2\dot{\theta}^2,
+	\]
+	que son énergie potentielle est
+	\[
+	E_p = mgl(1-\cos\theta)
+	\]
+	\item Justifier que l'énergie mécanique
+	\[
+	E_m = E_k + E_p
+	\]
+	est constante. Exprimer sa dérivée en fonction de $\theta(t)$ et ses dérivées.
+	\item En déduire l'équation différentielle vérifiée par $\theta$.
+	\item On suppose que $\theta$ reste toujours petit. Simplifier l'équation différentielle en utilisant l'approximation
+	\[
+	\sin\theta \simeq \theta\quad \text{pour}\ \theta\ \text{petit}
+	\]
+	et la résoudre.
+	\end{enumerate}
 \end{exo}
 
 \section{Oscillateur amorti}
 
 \subsection{Forces de frottement fluide}
 
+On modélise les forces de frottement par une relation linéaire avec la vitesse $\vec{v}$, de la forme:
+\[\vec F_f = -\lambda \vec{v}.\]
+
 \subsection{Système masse-ressort amorti}
 
+On considère encore une fois le ressort astreint à se déplacer selon un axe horizontal $(O,\vec{e}_x)$.
+
+Le principe fondamental de la dynamique s'écrit alors
+\begin{equation}
+m\od[2]{\vec{r}}{t} = -k(x(t)-l_0)\vec{e}_x - \lambda\vec{v}
+\end{equation}
+
+donc en projetant selon $\vec e_x$, en faisant le changement de variable $s = x-l_0$:
+\begin{equation}
+m\ddot{s} + \lambda\dot{s} + ks(t) = 0
+\end{equation}
+soit
+\begin{equation}
+\ddot{s} + 2\beta\omega_0\dot{s} + \omega_0^2s(t) = 0
+\end{equation}
+avec $\omega_0 = \sqrt{\frac{k}{m}}$ la pulsation propre du ressort, $\beta = \frac{\lambda}{2\omega_0}$ le facteur d'amortissement, quantité sans dimension.
+
+L'équation caractéristique est alors
+\begin{equation}
+r^2 + 2\beta\omega_0r + \omega_0^2 = 0
+\end{equation}
+dont le discriminant réduit (le discriminant normal divisé par 4) est $\Delta = \beta^2\omega_0^2 - \omega_0^2 = \omega_0^2(\beta^2-1)$.
+
+\begin{rap}[Discriminant réduit]
+	Étant donné une équation du second degré
+	\[
+	ar^2 + br + c = 0,
+	\]
+	on pose $b' = b/2$ la moitié du coefficient de degré 1, et on définit la quantité appelée \textit{discriminant réduit}
+	\[
+	\Delta' = b'^2 - ac
+	\]
+	(noter l'absence du facteur 4 devant le produit $ac$). On remarque alors que $\Delta'=\Delta/4$, où $\Delta$ est le discriminant classique.
+	
+	Les racines de l'équation s'écrivent alors
+	\[
+	r_{1,2} = -\frac{b'}{a} \pm \frac{\sqrt{\Delta'}}{a}
+	\]
+	(noter l'absence du facteur 2 aux dénominateurs), on prenant soit de remplacer $\sqrt{\Delta'}$ par $i\sqrt{-\Delta'}$ lorsque $\Delta' < 0$.
+\end{rap}
+
+
+On distingue donc, en fonction du signe de $\Delta$ trois cas différents:
+\begin{itemize}
+	\item $\Delta > 0$ soit amortissement fort $\beta > 1$: alors le déplacement $s$ s'écrit
+	\[\boxed{
+	s(t) = e^{-\beta t}\left(A\cosh(\gamma t) + B\sinh(\gamma t)\right)}
+	\]
+	avec $\gamma = \sqrt{\beta^2-1}$.
+	\item $\Delta > 0$ soit amortissement fort $\beta < 1$: le déplacement s'écrit
+	\[\boxed{
+	s(t) = e^{-t/\tau}\left(A\cos(\omega't)+B\sin(\omega't)\right),}\quad \omega' = \sqrt{1-\beta^2}, \ \tau = \beta\omega_0
+	\]
+	où $\omega'$ est appelée \textit{pseudo-pulsation} du système et $\tau$ est le \textit{temps caractéristique d'amortissement} du système (pour $t\geq 5\tau$ l'amplitude de $s$ a diminué de 95\% par rapport à son amplitude initiale).
+	\item $\Delta=0$ soit amortissement critique $\beta=1$: alors
+	\[\boxed{
+	s(t) = e^{-t/\tau}(A+Bt)}
+	\]
+\end{itemize}
+
+Dans toutes les situations précédentes, on détermine les constantes $A$ et $B$ à l'aide des conditions initiales, sur la position $s_0 = s(0) = x(0) - l_0 = x_0-l_0$ et sur la vitesse $\dot{s}(0) = \dot{x}(0) = v_0$.
+
+On introduit souvent une quantité sans dimension $Q$, appelée \textit{facteur de qualité} et définie par
+\[
+Q = \frac{m\omega_0}{\lambda}
+\]
+de sorte que $\displaystyle\frac{\lambda}{m}=\frac{\omega_0}{Q}$ et l'équation du mouvement se réécrive
+\[
+\ddot{s} + \frac{\omega_0}{Q}\dot{s} + ks(t) = 0.
+\]
+
 \section{Oscillateurs couplés}
+
+
+On considère ici un système constitué de deux masses identiques $m$ et de deux ressorts identiques, de constantes de raideur $k$ et longueur au repos $\ell_0$ identiques, dont on note $x_1=\ell_1-\ell_0$ et $x_2=\ell_2-\ell_0$ leurs élongations.
+
+Quand on fait l'expérience, on observe que le mouvement des deux ressorts est oscillatoire, et semble être périodique. On trouve même, en ajustant bien les positions et vitesses initiales des ressorts, que l'on peut les faire se déplacer dans le même sens ou encore dans des sens opposés.
+
+\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}
+	\tikzset{dot/.style={circle,fill,inner sep=1.8pt}};
+	\node[dot,label={[label distance=1]below right:$O$}](Origine) at (0,0) {};
+	\node[dot,inner sep=2.6pt,label={[label distance=1]below:$m$}](M1) at (4,0) {};
+	\node[dot,inner sep=2.6pt,label={[label distance=1]below:$m$}](M2) at (6,0) {};
+	
+	
+	\fill [pattern = north east lines] (0,-1) rectangle (-0.6,1);
+	\draw [thick] (0,-0.6) -- (0,1);
+	
+	\draw[decoration={aspect=0.3, segment length=3mm, amplitude=6mm,coil},decorate] (Origine) -- (M1) node[midway,label={[label distance=10]above:$\ell_1$}] {};
+	\draw[decoration={aspect=0.3, segment length=2mm, amplitude=6mm,coil},decorate] (M1) -- (M2) node[midway,label={[label distance=10]above:$\ell_2$}] {};
+	
+	\fill [pattern = north east lines] (0,-0.6) rectangle (6.2,-1);
+	\draw [thick] (0,-0.6) -- (6.2,-0.6);
+	
+	\draw[->,violet,line width=1.4pt] (Origine) -- (1,0) node[midway,label={[label distance=2]-20:$\vec{e}_x$}] {};
+	\end{tikzpicture}
+	\caption{Système d'oscillateurs couplés}
+\end{figure}
+
+\begin{exo}[TD]
+	On va déterminer le mouvement de ce système.
+	\begin{itemize}
+	\item Déterminer les équations vérifiées par les élongations $x_1$ et $x_2$.
+	
+	Résoudre le système (déterminer la pulsation propre et les expressions des élongations) dans les situations
+	\item $x_1 = x_2$ (\textit{mode symétrique})
+	\item $x_1 = -x_1$ (\textit{mode antisymétrique})
+	\end{itemize}
+\end{exo}
+
+En général, les expressions de $x_1$ et $x_2$ sont des combinaisons des expressions correspondant aux deux modes, symétrique et antisymétrique.
+
+Ce principe de résolution des systèmes d'équations différentielles, par \textit{décomposition modale} en fonctions solutions élémentaires, est très utilisé en physique mathématique, notamment en physique des ondes.
 
 \end{document}
