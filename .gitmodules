@@ -1,0 +1,3 @@
+[submodule "vibestring"]
+	path = vibestring
+	url = git@bitbucket.org:ManifoldFR/vibestring.git
